@@ -1,60 +1,166 @@
-gostApp.controller('AcoGradCtrl', function ($scope, $http) {
+gostApp.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeout) {
     $scope.Page.setTitle('GRADUAL PATTERNS');
     $scope.Page.setHeaderIcon(iconAcograd);
-    
-    /*$http.post(getPysocketUrl()).then(function (response) {
-        $scope.Pymsg = response;
-        $scope.Pyurl = getPysocketUrl();
-    });
 
-    $http.get(getUrl() + "/v1.0/Datastreams").then(function (response) {
-        $scope.Gomsg = response;
+    //var $ctrl = this;
+    $scope.info_title = "information";
+    $scope.info_msg = "click 'execute' button to cross different datastreams";
+    $scope.supports = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+    $scope.patterns = ["emerging","gradual"];
+
+    $scope.newParams = {};
+    $scope.newParams.minSup = 0.5;
+    $scope.newParams.patternType = "gradual";
+    $scope.newParams.crossingList = [];
+
+    $scope.ds_model = [];
+    $scope.ds_data = [];
+    $scope.observationList = [];
+    $scope.datastreamsList = [];
+
+    $scope.ds_settings = {
+        scrollableHeight: '200px',
+        scrollable: true,
+        enableSearch: true
+    };
+
+    $scope.showProgress = false;
+    $scope.showSummary = false;
+    $scope.showPatterns = false;
+
+    $http.get(getUrl() + "/v1.0/Datastreams?$select=id,name").then(function (response) {
         $scope.datastreamsList = response.data.value;
-        $scope.Gourl = getUrl();
-    });*/
+        angular.forEach($scope.datastreamsList, function(value, key){
+            $scope.ds_data.push({id: value['@iot.id'], label: value['name']});
+        });
+    });
 
-    var res = $http.get(getUrl() + "/py1.0");
-    res.success(function(data, status, headers, config) {
-        //alert( "added: " + JSON.stringify({data: data}));
-        $scope.Pymsg = data;//JSON.stringify({data: data});
-        $scope.Pyurl = status;
-    });
-    res.error(function(data, status, headers, config) {
-        $scope.Pymsg = JSON.stringify({data: config});
-        $scope.Pyurl = status;
-        //alert( "failure: " + JSON.stringify({data: data}));
-    });
-    
-    $scope.runAcoGraank = function(dataStreams) {
-        //var res = $http.post(getUrl() + '/v1.0/Things', newThing);
-        var res = $http.post(getPysocketUrl(), dataStreams);
+    $scope.supportClicked = function(sel_sup){
+        $scope.newParams.minSup = sel_sup;
+    }
+
+    $scope.patternClicked = function(sel_pattern){
+        $scope.newParams.patternType = sel_pattern;
+    }
+
+    $scope.changeView = function(val){
+        if(val == 'progress'){
+            //$scope.content = "apple content";
+
+            $scope.showProgress = true;
+            $scope.showSummary = false;
+            $scope.showPatterns = false;
+        } else if (val == 'summary') {
+            //$scope.content = "banana content";
+
+            $scope.showProgress = false;
+            $scope.showSummary = true;
+            $scope.showPatterns = false;
+        } else if (val == 'pattern') {
+            //$scope.content = "orange content";
+
+            $scope.showProgress = false;
+            $scope.showSummary = false;
+            $scope.showPatterns = true;
+        }
+      
+    }
+
+
+    $scope.open = function (content){//}, parentSelector) {
+        //var parentElem = parentSelector ? 
+        //  angular.element($document[0].querySelector('.right_col ' + parentSelector)) : undefined;
+        var modalInstance = $uibModal.open({
+          //animation: true,
+          //ariaLabelledBy: 'modal-title',
+          //ariaDescribedBy: 'modal-body',
+          templateUrl: content,
+          //size: 'lg',
+          controller: 'ModalInstanceCtrl',
+          //controllerAs: '$ctrl',          
+          //appendTo: parentElem,
+          resolve: {
+          params: function() {
+            return $scope.newParams;
+            }
+          }
+        });
+    };
+
+    $scope.initData = function(){
+        $scope.newParams.crossingList = [];
+        if($scope.ds_model.length <= 1){
+            alert("Error: select atleast 2 datastreams");
+        }else{
+            // fetch datastream observations
+            getObservations($scope.ds_model).then(function(crossingList){
+                $scope.newParams.crossingList = crossingList;
+                //stop spinner
+
+                //2. Request for extraction of gradual patterns
+                if($scope.newParams.patternType === "gradual"){
+                    //alert("pattern type: "+$scope.newParams.patternType);
+                    //$scope.changeView('summary');
+                    $scope.open('gradualContent.html');
+                }else if($scope.newParams.patternType === "emerging"){
+                    //alert("pattern type: "+$scope.newParams.patternType);
+                    $scope.open('emergingContent.html');
+                }else{
+                    var msg = "Error: unable to resolve request, please reload page";
+                    alert(msg);
+                    $scope.info_msg = msg;
+                }
+            });              
+        }
+    }
+
+    var getObservations = function(data_model){
+        // start spinner
+        var crossingList = [];
+        var deferred = $q.defer();
+
+        angular.forEach(data_model, function(value, key){
+            //1. Load selected datastreams' observations
+            var res = $http.get(getUrl() + "/v1.0/Datastreams("+ value.id +")/Observations?$top=1000&$orderby=phenomenonTime desc&$select=id,phenomenonTime,result");
+            res.success(function(data, status, headers, config) {
+                var observationList = data.value;
+                var tempList = [];
+                angular.forEach(observationList, function(val, k){
+                    var tempObsv = [val['phenomenonTime'],val['result']];
+                    tempList.push(tempObsv)
+                });
+                crossingList.push({id: value.id, data: tempList});
+            });
+            res.error(function(data, status, headers, config) {
+                var msg = "HTML failure: " + status;
+                //alert(msg);
+                $scope.info_msg = msg;
+                deferred.reject(msg);
+            });
+        });
+        deferred.resolve(crossingList);
+        return deferred.promise;
+    }
+
+    var runPython = function(dataset){
+        //start spinner
+        var deferred = $q.defer();
+
+        var res = $http.post(getUrl() + "/py1.0", dataset);
         res.success(function(data, status, headers, config) {
             //alert( "added: " + JSON.stringify({data: data}));
-           $scope.imgData = data
+          var imgData = data;
+          msg = "+ : increasing and - : decreasing and x : irrelevant";
+          $scope.info_msg = msg;
+          deferred.resolve(imgData);
         });
         res.error(function(data, status, headers, config) {
-            alert( "failure: " + JSON.stringify({data: data}));
+            var msg = "failure: " + status;
+            //alert(msg);
+            $scope.info_msg = msg;
+            deferred.reject;
         });
-    };
+        return deferred.promise;
+    }
 
-    /*$scope.datastreamClicked = function (datastreamID) {
-        angular.forEach($scope.things, function (value, key) {
-            if (value["@iot.id"] == thingID) {
-                $scope.Page.selectedDatastream = value;
-            }
-        });
-
-        $scope.Page.go("datastream/" + datastreamID);
-    };
-
-     $scope.deleteDatastreamClicked = function (entity) {
-        var res = $http.delete(getUrl() + '/v1.0/Datastreams(' + entity["@iot.id"] + ')');
-        res.success(function(data, status, headers, config) {
-            var index = $scope.datastreamsList.indexOf(entity);
-            $scope.datastreamsList.splice(index, 1);
-        });
-        res.error(function(data, status, headers, config) {
-            alert( "failure: " + JSON.stringify({data: data}));
-        });
-     };*/
 });

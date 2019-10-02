@@ -1,7 +1,7 @@
 version: '2'
 services:
     py-server:
-        image: tiangolo/uwsgi-nginx:python3.7
+        image: tiangolo/uwsgi-nginx:python3.6
         volumes:
             - ./py_app:/app
         ports:
@@ -39,10 +39,11 @@ services:
             GOST_DB_HOST: gost-db
             GOST_MQTT_HOST: mosquitto
     dashboard:
-        image: geodan/gost-dashboard
+        build:
+            context: ./custom_dash
+            dockerfile: Dockerfile
         volumes:
-            - ./dash.conf:/etc/nginx/conf.d/default.conf
-            - ./dash_content:/var/www/html
+            - ./custom_dash/content:/var/www/html
         ports:
             - "8080:8080"
         depends_on:

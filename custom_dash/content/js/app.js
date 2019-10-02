@@ -1,5 +1,5 @@
 var wsURL = "";
-var gostApp = angular.module('gostApp', ['ngRoute']);
+var gostApp = angular.module('gostApp', ['ngRoute','ui.bootstrap','angularjs-dropdown-multiselect']);
 
 gostApp.factory('Page', function () {
     var title = 'GOST';

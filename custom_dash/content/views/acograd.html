@@ -1,38 +1,134 @@
 <div>
-       
-    <!--div class="col-md-12 main">
-        <div class="row" style="background-color: rgb(195, 236, 10)">hello there</div>
-        <div class="row h-50">
-            <div class="col-md-9" style="background-color: rgb(51, 51, 51)">graphs</div>
-            <div class="col-md-3" style="background-color: rgb(235, 5, 5)">info</div>
-        </div>
-    </div-->
     <div class="grid-wrapper">
         <div class="grid-header">
-            <p>{{Gourl}}</p>
+            <div class="col-md-12">
+              <div class="row">
+                  <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-4">
+                            <h2>Datastreams</h2>
+                        </div>
+                        <div class="col-md-2">
+                          <div ng-dropdown-multiselect="" options="ds_data" selected-model="ds_model" checkboxes="true" extra-settings="ds_settings"></div>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="col-md-6">
+                    <div class="btn-group">
+                      <div class="btn-group" uib-dropdown>
+                          <button id="pattern_type" type="button" class="btn btn-primary" uib-dropdown-toggle>
+                            pattern type</button>
+                          <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+                                <span id="pattern">{{newParams.patternType}}</span>
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                          </button>
+                          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="support">
+                              <li ng-repeat="pat in patterns">
+                                <a ng-click="patternClicked(pat)" href>{{pat}}</a>
+                              </li>
+                          </ul>
+          
+                      </div>
+                      <div class="btn-group" uib-dropdown>
+                          <button id="support" type="button" class="btn btn-success" uib-dropdown-toggle>
+                              minimum support</button> 
+                          <button type="button" class="btn btn-success" uib-dropdown-toggle>
+                              <span id="min_sup">{{newParams.minSup}}</span>
+                              <span class="caret"></span>
+                              <span class="sr-only"></span>
+                          </button>
+                          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="support">
+                                <li ng-repeat="sup in supports">
+                                  <a ng-click="supportClicked(sup)" href>{{sup}}</a>
+                                </li>
+                          </ul>
+          
+                          <button class="btn btn-danger" type="button" id="execute" ng-click="initData()">
+                            execute</button>
+                      </div>
+                    </div>
+                  </div>
+                  <!--div class="col-md-2"></div-->
+              </div>
+            </div>  
+
         </div>
         <div class="grid-content-right">
-            <h3>gp graphs</h3>
-            <p>{{Pymsg}}</p>
+            <div class="col-md-12">
+              <div class="row">
+                  <p>{{newParams.crossingList}}</p>
+                  <!--div class="content">
+                      <div ng-show="AcoGradCtrl.showSummary" ng-include ="'views/acogradSummary.html'"></div>
+                      <div ng-show="AcoGradCtrl.showProgress" ng-include = "'views/acogradProgress.html'"></div>
+                      <div ng-show="AcoGradCtrl.showPatterns" ng-include = "'views/acogradPatterns.html'"></div>
+                  </div-->
+              </div>
+            </div>
+            <!--h3>gp graphs</h3-->
         </div>
         <div class="grid-content-left">
-            <h2><u>info</u></h2>
-            <p>{{Pyurl}}</p>
+            <div class="col-md-12">
+              <div class="row">
+                <h2><u>{{info_title}}</u></h2>
+              </div>
+              <div class="row">
+                <p>{{info_msg}}</p>
+              </div>
+            </div>
         </div>
     </div>
-    <!--div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="pattern-type">
-            Gradual Patterns
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" data-value="Gradual">Gradual</a>
-            <a class="dropdown-item" data-value="Emerging">Emerging</a>
+
+    <!-- Modal views -->
+    <script type="text/ng-template" id="gradualContent.html">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="modal-title"><i class="fa fa-balance-scale"></i> EXTRACT GRADUAL PATTERNS</h4>
+      </div>
+      <div class="modal-body" id="modal-body">
+          <!--li ng-repeat="ds in params.ds_model">Datastreams:
+            <a>{{ds}}</a>
+          </li>
+          <div class="input-group">
+            <span class="input-group-addon">Pattern type</span>
+            <span class="input-group-addon">{{params.patternType}}</span>
           </div>
+          <div class="input-group">
+              <span class="input-group-addon">Pattern type</span>
+              <span class="input-group-addon">{{params.minSup}}</span>
+          </div-->
+          <div class="input-group">
+              <span class="input-group-addon">Max. steps</span>
+              <input type="number" ng-model="data.steps" />
+          </div>
+          <div class="input-group">
+              <span class="input-group-addon">Max. combinations</span>
+              <input type="number" ng-model="data.combs" />
+          </div>
+      </div>
+      <div class="modal-footer">
+          <input type="submit" class="btn btn-default" ng-click="runAcoGraank(data)" value="Run ACO-GRAANK" />
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Close" />
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="emergingContent.html">
+      <div class="modal fade" role="dialog">
+          <div class="modal-dialog">
+              <div class="modal-content">
+
+                <div class="modal-header">
+                    <h3>Lorem Ipsum</h3>
+                  </div>
+                <div class="modal-body">
+                    <p>
+                      hello there
+                    </p>
+                  </div>
+
+              </div>
+            </div>
         </div>
-        <input type="text" class="form-control" id="select-directory" placeholder="click to select file ...">
-        <div class="input-group-append">
-          <button class="btn btn-secondary" type="button" id="upload-file">Upload</button>
-        </div>
-    </div-->
+    </script>
+
 </div>
