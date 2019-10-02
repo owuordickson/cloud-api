@@ -1,17 +1,24 @@
 gostApp.controller('ModalInstanceCtrl', function($uibModalInstance, $scope, $http, params) {
-    //console.log(params);
-    //alert("success!")
+
     $scope.data = params;
     $scope.data.steps = 20;
     $scope.data.combs = 100;
     $scope.data.m_rep = 0.5;
     $scope.data.c_ref = 1;
 
-    $scope.selected = {
+    /*$scope.selected = {
       item: $scope.data.patternType
+    };*/
+
+    $scope.ok = function () {
+      $uibModalInstance.close();
+    };
+  
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
     };
 
-    $scope.runAcoGraank = function(data) {
+    /*$scope.runAcoGraank = function(data) {
         //var res = $http.post(getUrl() + '/v1.0/Things', newThing);
         var res = $http.post(getUrl() + "/py1.0", data);
         res.success(function(data, status, headers, config) {
@@ -25,6 +32,6 @@ gostApp.controller('ModalInstanceCtrl', function($uibModalInstance, $scope, $htt
             alert(msg);
             $scope.info_msg = msg;
         });
-    };
+    };*/
 
   });

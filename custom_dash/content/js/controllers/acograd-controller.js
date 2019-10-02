@@ -1,4 +1,20 @@
-gostApp.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeout) {
+gostApp
+.directive('loading', function () {
+    return {
+      restrict: 'E',
+      replace:true,
+      template: '<div class="loading"><img src="assets/ajax-loader.gif" width="40" height="40" />  working...</div>',
+      link: function (scope, element, attr) {
+            scope.$watch('loading', function (val) {
+                if (val)
+                    $(element).show();
+                else
+                    $(element).hide();
+            });
+      }
+    }
+})
+.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeout) {
     $scope.Page.setTitle('GRADUAL PATTERNS');
     $scope.Page.setHeaderIcon(iconAcograd);
 
@@ -24,9 +40,7 @@ gostApp.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeo
         enableSearch: true
     };
 
-    $scope.showProgress = false;
-    $scope.showSummary = false;
-    $scope.showPatterns = false;
+    $scope.loading = false;
 
     $http.get(getUrl() + "/v1.0/Datastreams?$select=id,name").then(function (response) {
         $scope.datastreamsList = response.data.value;
@@ -43,42 +57,13 @@ gostApp.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeo
         $scope.newParams.patternType = sel_pattern;
     }
 
-    $scope.changeView = function(val){
-        if(val == 'progress'){
-            //$scope.content = "apple content";
-
-            $scope.showProgress = true;
-            $scope.showSummary = false;
-            $scope.showPatterns = false;
-        } else if (val == 'summary') {
-            //$scope.content = "banana content";
-
-            $scope.showProgress = false;
-            $scope.showSummary = true;
-            $scope.showPatterns = false;
-        } else if (val == 'pattern') {
-            //$scope.content = "orange content";
-
-            $scope.showProgress = false;
-            $scope.showSummary = false;
-            $scope.showPatterns = true;
-        }
-      
-    }
-
-
-    $scope.open = function (content){//}, parentSelector) {
-        //var parentElem = parentSelector ? 
-        //  angular.element($document[0].querySelector('.right_col ' + parentSelector)) : undefined;
+    $scope.open = function (content){
         var modalInstance = $uibModal.open({
-          //animation: true,
-          //ariaLabelledBy: 'modal-title',
-          //ariaDescribedBy: 'modal-body',
+          animation: true,
+          ariaLabelledBy: 'modal-title',
+          ariaDescribedBy: 'modal-body',
           templateUrl: content,
-          //size: 'lg',
           controller: 'ModalInstanceCtrl',
-          //controllerAs: '$ctrl',          
-          //appendTo: parentElem,
           resolve: {
           params: function() {
             return $scope.newParams;
@@ -96,11 +81,11 @@ gostApp.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeo
             getObservations($scope.ds_model).then(function(crossingList){
                 $scope.newParams.crossingList = crossingList;
                 //stop spinner
+                $scope.loading = false;
 
                 //2. Request for extraction of gradual patterns
                 if($scope.newParams.patternType === "gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
-                    //$scope.changeView('summary');
                     $scope.open('gradualContent.html');
                 }else if($scope.newParams.patternType === "emerging"){
                     //alert("pattern type: "+$scope.newParams.patternType);
@@ -116,6 +101,7 @@ gostApp.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeo
 
     var getObservations = function(data_model){
         // start spinner
+        $scope.loading = true;
         var crossingList = [];
         var deferred = $q.defer();
 
@@ -144,6 +130,7 @@ gostApp.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeo
 
     var runPython = function(dataset){
         //start spinner
+        $scope.loading = true;
         var deferred = $q.defer();
 
         var res = $http.post(getUrl() + "/py1.0", dataset);
