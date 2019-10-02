@@ -14,6 +14,21 @@ gostApp
       }
     }
 })
+.directive('results', function () {
+    return {
+      restrict: 'E',
+      replace:true,
+      template: '<div class="results"><img src="assets/Figure.png" width="420" height="400" /></div>',
+      link: function (scope, element, attr) {
+            scope.$watch('results', function (val) {
+                if (val)
+                    $(element).show();
+                else
+                    $(element).hide();
+            });
+      }
+    }
+})
 .controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeout) {
     $scope.Page.setTitle('GRADUAL PATTERNS');
     $scope.Page.setHeaderIcon(iconAcograd);
@@ -41,6 +56,7 @@ gostApp
     };
 
     $scope.loading = false;
+    $scope.results = true;
 
     $http.get(getUrl() + "/v1.0/Datastreams?$select=id,name").then(function (response) {
         $scope.datastreamsList = response.data.value;
@@ -70,6 +86,16 @@ gostApp
             }
           }
         });
+
+        modalInstance.result.then(function(dataset){
+            runPython(dataset).then(function(resData){
+                //stop spinner
+                $scope.loading = false;
+                $scope.results = true;
+
+                //check if resData is fine then display, otherwise show message
+            });
+        });
     };
 
     $scope.initData = function(){
@@ -82,6 +108,7 @@ gostApp
                 $scope.newParams.crossingList = crossingList;
                 //stop spinner
                 $scope.loading = false;
+                $scope.results = false;
 
                 //2. Request for extraction of gradual patterns
                 if($scope.newParams.patternType === "gradual"){
@@ -102,6 +129,7 @@ gostApp
     var getObservations = function(data_model){
         // start spinner
         $scope.loading = true;
+        $scope.results = false;
         var crossingList = [];
         var deferred = $q.defer();
 
@@ -119,6 +147,8 @@ gostApp
             });
             res.error(function(data, status, headers, config) {
                 var msg = "HTML failure: " + status;
+                $scope.loading = false;
+                $scope.results = false;
                 //alert(msg);
                 $scope.info_msg = msg;
                 deferred.reject(msg);
@@ -131,18 +161,21 @@ gostApp
     var runPython = function(dataset){
         //start spinner
         $scope.loading = true;
+        $scope.results = false;
         var deferred = $q.defer();
 
         var res = $http.post(getUrl() + "/py1.0", dataset);
         res.success(function(data, status, headers, config) {
-            //alert( "added: " + JSON.stringify({data: data}));
-          var imgData = data;
-          msg = "+ : increasing and - : decreasing and x : irrelevant";
-          $scope.info_msg = msg;
-          deferred.resolve(imgData);
+            alert( "added: " + JSON.stringify({data: data}));
+            var imgData = data;
+            msg = "+ : increasing and - : decreasing and x : irrelevant";
+            $scope.info_msg = msg;
+            deferred.resolve(imgData);
         });
         res.error(function(data, status, headers, config) {
             var msg = "failure: " + status;
+            $scope.loading = false;
+            $scope.results = false;
             //alert(msg);
             $scope.info_msg = msg;
             deferred.reject;

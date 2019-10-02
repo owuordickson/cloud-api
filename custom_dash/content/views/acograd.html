@@ -64,10 +64,14 @@
                   <div class="col-md-4"></div>
               </div>
               <div class="row">
-                  <p>{{newParams.crossingList}}</p>
+                  <div class="col-md-8">
+                      <results></results>
+                  </div>
               </div>
+              <!--div class="row">
+                  <p>{{newParams.crossingList}}</p>
+              </div-->
             </div>
-            <!--h3>gp graphs</h3-->
         </div>
         <div class="grid-content-left">
             <div class="col-md-12">
@@ -113,22 +117,33 @@
     </script>
 
     <script type="text/ng-template" id="emergingContent.html">
-      <div class="modal fade" role="dialog">
-          <div class="modal-dialog">
-              <div class="modal-content">
-
-                <div class="modal-header">
-                    <h3>Lorem Ipsum</h3>
-                  </div>
-                <div class="modal-body">
-                    <p>
-                      hello there
-                    </p>
-                  </div>
-
-              </div>
-            </div>
-        </div>
+      <div class="modal-header">
+          <button type="button" class="close" ng-click="cancel()">&times;</button>
+          <h4 class="modal-title" id="modal-title"><i class="fa fa-balance-scale"></i> EXTRACT EMERGING GRADUAL PATTERNS</h4>
+      </div>
+      <div class="modal-body" id="modal-body">
+          Datastreams selected: 
+          <ul> 
+              <li ng-repeat="ds in data.crossingList">
+                <a>{{ds.id}}</a>
+              </li>
+          </ul>
+          <p>Pattern type: {{data.patternType}}</p>
+          <p>Minimum support: {{data.minSup}}</p>
+          
+          <div class="input-group">
+              <span class="input-group-addon">Max. steps</span>
+              <input type="number" min="0" step="1" ng-model="data.steps" ng-pattern="/^[0-9]{1,7}$/"/>
+          </div>
+          <div class="input-group">
+              <span class="input-group-addon">Max. combinations</span>
+              <input type="number" min="0" step="1" ng-model="data.combs" ng-pattern="/^[0-9]{1,7}$/" />
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" type="button" ng-click="runAcoGraank()">Run ACO-GRAANK</button>
+          <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+      </div>
     </script>
 
 </div>
