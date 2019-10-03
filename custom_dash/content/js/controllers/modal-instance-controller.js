@@ -1,4 +1,7 @@
 gostApp.controller('ModalInstanceCtrl', function($uibModalInstance, $scope, $http, params) {
+  
+    $scope.reps = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+    $scope.refs = [];
 
     $scope.data = params;
     $scope.data.steps = 20;
@@ -6,13 +9,19 @@ gostApp.controller('ModalInstanceCtrl', function($uibModalInstance, $scope, $htt
     $scope.data.m_rep = 0.5;
     $scope.data.c_ref = 1;
 
-    /*$scope.selected = {
-      item: $scope.data.patternType
-    };
+    var count = 0;
+    angular.forEach($scope.data.crossingList, function(value, key){
+        count = count + 1;
+        $scope.refs.push(count);
+    });
 
-    $scope.ok = function () {
-        $uibModalInstance.close();
-    };*/
+    $scope.repClicked = function(sel_rep){
+        $scope.data.m_rep = sel_rep;
+    }
+
+    $scope.refClicked = function(sel_ref){
+        $scope.data.c_ref = sel_ref;
+    }
   
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
