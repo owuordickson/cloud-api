@@ -42,7 +42,7 @@ gostApp
     $scope.newParams = {};
     $scope.newParams.minSup = 0.5;
     $scope.newParams.patternType = "gradual";
-    $scope.newParams.crossingList = [];
+    $scope.newParams.crossingList = null;
 
     $scope.ds_model = [];
     $scope.ds_data = [];
@@ -56,7 +56,7 @@ gostApp
     };
 
     $scope.loading = false;
-    $scope.results = true;
+    $scope.results = false;
 
     $http.get(getUrl() + "/v1.0/Datastreams?$select=id,name").then(function (response) {
         $scope.datastreamsList = response.data.value;
@@ -92,7 +92,7 @@ gostApp
                 //stop spinner
                 $scope.loading = false;
                 $scope.results = true;
-
+                //alert( "added: " + JSON.stringify({data: data}));
                 //check if resData is fine then display, otherwise show message
             });
         });
@@ -126,6 +126,14 @@ gostApp
         }
     }
 
+    $scope.getDatastreamName = function(id){
+        angular.forEach($scope.ds_data, function(value, key){
+            if(value.id === id){
+                return value.label;
+            }
+        });
+    }
+
     var getObservations = function(data_model){
         // start spinner
         $scope.loading = true;
@@ -140,13 +148,13 @@ gostApp
                 var observationList = data.value;
                 var tempList = [];
                 angular.forEach(observationList, function(val, k){
-                    var tempObsv = [val['phenomenonTime'],val['result']];
+                    var tempObsv = {"time" : val['phenomenonTime'], "value" : val['result']};
                     tempList.push(tempObsv)
                 });
-                crossingList.push({id: value.id, data: tempList});
+                crossingList.push({id: value.id, name: $scope.getDatastreamName(value.id), observations: tempList});
             });
             res.error(function(data, status, headers, config) {
-                var msg = "HTML failure: " + status;
+                var msg = "Data crossing failure: " + status;
                 $scope.loading = false;
                 $scope.results = false;
                 //alert(msg);
@@ -166,19 +174,19 @@ gostApp
 
         var res = $http.post(getUrl() + "/py1.0", dataset);
         res.success(function(data, status, headers, config) {
-            alert( "added: " + JSON.stringify({data: data}));
             var imgData = data;
             msg = "+ : increasing and - : decreasing and x : irrelevant";
             $scope.info_msg = msg;
             deferred.resolve(imgData);
         });
         res.error(function(data, status, headers, config) {
-            var msg = "failure: " + status;
+            //var msg = "Python API failure: "  + JSON.stringify(config);
+            var msg = "Python API failure: "  + status;
             $scope.loading = false;
             $scope.results = false;
             //alert(msg);
             $scope.info_msg = msg;
-            deferred.reject;
+            deferred.reject(msg);
         });
         return deferred.promise;
     }
