@@ -3,7 +3,7 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="loading"><img src="assets/ajax-loader.gif" width="40" height="40" />  working...</div>',
+      template: '<div class="loading"><img src="images/loading.gif" width="40" height="40" />  working...</div>',
       link: function (scope, element, attr) {
             scope.$watch('loading', function (val) {
                 if (val)
@@ -18,7 +18,7 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="results"><img src="assets/Figure.png" width="420" height="400" /></div>',
+      template: '<div class="results"><img src="images/Figure.png" width="420" height="400" /></div>',
       link: function (scope, element, attr) {
             scope.$watch('results', function (val) {
                 if (val)
@@ -88,11 +88,17 @@ gostApp
         });
 
         modalInstance.result.then(function(dataset){
-            runPython(dataset).then(function(resData){
+            //$scope.loading = false;
+            //$scope.results = true;
+            
+            //var blob = new Blob([JSON.stringify(dataset)], {type : 'application/json'});
+            //saveAs(blob, "dataset.json");
+
+            runPython(JSON.stringify(dataset)).then(function(resData){
                 //stop spinner
                 $scope.loading = false;
                 $scope.results = true;
-                //alert( "added: " + JSON.stringify({data: data}));
+                alert( "added: " + JSON.stringify(resData));
                 //check if resData is fine then display, otherwise show message
             });
         });

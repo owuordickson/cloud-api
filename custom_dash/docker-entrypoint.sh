@@ -106,10 +106,10 @@ echo "
 		}
     }
 
-		location /py1.0 {
-				include uwsgi_params;
-				uwsgi_pass py-server:8088;
-		}
+	location /py1.0 {
+		include uwsgi_params;
+		uwsgi_pass py-server:8088;
+	}
 
     location = /favicon.ico { access_log off; log_not_found off; }
 }" >> /etc/nginx/conf.d/default.conf
