@@ -1,0 +1,57 @@
+version: '2'
+services:
+    py-server:
+        image: tiangolo/uwsgi-nginx:python3.6
+        volumes:
+            - ./py_app:/app
+        ports:
+            - "8088:80"
+    node-red:
+        image: nodered/node-red-docker:slim-v8
+        volumes:
+            - nodered:/data
+        ports:
+            - "1880:1880"
+    mosquitto:
+        image: toke/mosquitto
+        volumes:
+            - mosquitto_data:/mqtt/data
+            - mosquitto_conf:/mqtt/config:ro
+        ports:
+            - "1883:1883"
+            - "9001:9001"
+    gost-db:
+        image: geodan/gost-db
+        volumes:
+            - postgis:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: gost
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+    gost:
+        image: geodan/gost
+        volumes:
+            - gost_conf:/gostserver/config
+        depends_on:
+            - mosquitto
+            - gost-db
+        environment:
+            GOST_DB_HOST: gost-db
+            GOST_MQTT_HOST: mosquitto
+    dashboard:
+        build:
+            context: ./custom_dash
+            dockerfile: Dockerfile
+        volumes:
+            - ./custom_dash/content:/var/www/html
+        ports:
+            - "8080:8080"
+        depends_on:
+            - gost
+            - py-server
+volumes:
+    postgis: {}
+    nodered: {}
+    gost_conf: {}
+    mosquitto_data: {}
+    mosquitto_conf: {}

@@ -1,0 +1,175 @@
+<div>
+    <div class="grid-wrapper">
+        <div class="grid-header">
+            <div class="col-md-12">
+              <div class="row">
+                  <div class="col-md-4">
+                      <div class="row">
+                        <div class="col-md-4">
+                            <h2>Datastreams</h2>
+                        </div>
+                        <div class="col-md-2">
+                          <div ng-dropdown-multiselect="" options="ds_data" selected-model="ds_model" checkboxes="true" extra-settings="ds_settings"></div>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="col-md-6">
+                    <div class="btn-group">
+                      <div class="btn-group" uib-dropdown>
+                          <button id="pattern_type" type="button" class="btn btn-primary" uib-dropdown-toggle>
+                            pattern type</button>
+                          <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+                                <span id="pattern">{{newParams.patternType}}</span>
+                                <span class="caret"></span>
+                                <span class="sr-only"></span>
+                          </button>
+                          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="support">
+                              <li ng-repeat="pat in patterns">
+                                <a ng-click="patternClicked(pat)" href>{{pat}}</a>
+                              </li>
+                          </ul>
+          
+                      </div>
+                      <div class="btn-group" uib-dropdown>
+                          <button id="support" type="button" class="btn btn-success" uib-dropdown-toggle>
+                              minimum support</button> 
+                          <button type="button" class="btn btn-success" uib-dropdown-toggle>
+                              <span id="min_sup">{{newParams.minSup}}</span>
+                              <span class="caret"></span>
+                              <span class="sr-only"></span>
+                          </button>
+                          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="support">
+                                <li ng-repeat="sup in supports">
+                                  <a ng-click="supportClicked(sup)" href>{{sup}}</a>
+                                </li>
+                          </ul>
+          
+                          <button class="btn btn-danger" type="button" id="execute" ng-click="initData()">
+                            execute</button>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>  
+
+        </div>
+        <div class="grid-content-right">
+            <div class="col-md-12">
+              <div class="row">
+                  <div class="col-md-4"></div>
+                  <div class="col-md-4">
+                      <loading></loading>
+                  </div>
+                  <div class="col-md-4"></div>
+              </div>
+              <div class="row">
+                  <div class="col-md-8">
+                      <results></results>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="grid-content-left">
+            <div class="col-md-12">
+              <div class="row">
+                <h2><u>{{info_title}}</u></h2>
+              </div>
+              <div class="row">
+                <p>{{info_msg}}</p>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal views -->
+    <script type="text/ng-template" id="gradualContent.html">
+      <div class="modal-header">
+          <button type="button" class="close" ng-click="cancel()">&times;</button>
+          <h4 class="modal-title" id="modal-title"><i class="fa fa-balance-scale"></i> EXTRACT GRADUAL PATTERNS</h4>
+      </div>
+      <div class="modal-body" id="modal-body">
+          Datastreams selected: 
+          <ul> 
+              <li ng-repeat="ds in data.crossingList">
+                <a>{{ds.id}}</a>
+              </li>
+          </ul>
+          <p>Pattern type: {{data.patternType}}</p>
+          <p>Minimum support: {{data.minSup}}</p>
+          
+          <div class="input-group">
+              <span class="input-group-addon">Max. steps</span>
+              <input type="number" min="0" step="1" ng-model="data.steps" ng-pattern="/^[0-9]{1,7}$/"/>
+          </div>
+          <div class="input-group">
+              <span class="input-group-addon">Max. combinations</span>
+              <input type="number" min="0" step="1" ng-model="data.combs" ng-pattern="/^[0-9]{1,7}$/" />
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" type="button" ng-click="runAcoGraank()">Run ACO-GRAANK</button>
+          <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+      </div>
+    </script>
+
+    <script type="text/ng-template" id="emergingContent.html">
+      <div class="modal-header">
+          <button type="button" class="close" ng-click="cancel()">&times;</button>
+          <h4 class="modal-title" id="modal-title"><i class="fa fa-balance-scale"></i> EXTRACT EMERGING GRADUAL PATTERNS</h4>
+      </div>
+      <div class="modal-body" id="modal-body">
+          Datastreams selected: 
+          <ul> 
+              <li ng-repeat="ds in data.crossingList">
+                <a>{{ds.id}}</a>
+              </li>
+          </ul>
+          <p>Pattern type: {{data.patternType}}</p>
+          <p>Minimum support: {{data.minSup}}</p>
+          <div class="input-group">
+            <div class="btn-group" uib-dropdown>
+              <button class="btn btn-warning">Representativity</button>
+              <button type="button" class="btn btn-warning" uib-dropdown-toggle>
+                  <span id="min_rep">{{data.m_rep}}</span>
+                  <span class="caret"></span>
+                  <span class="sr-only"></span>
+              </button>
+              <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="represent">
+                    <li ng-repeat="rep in reps">
+                      <a ng-click="repClicked(rep)" href>{{rep}}</a>
+                    </li>
+              </ul>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="btn-group" uib-dropdown>
+                <button class="btn btn-warning">Reference datastream</button>
+                <button type="button" class="btn btn-warning" uib-dropdown-toggle>
+                    <span id="ref_attr">{{data.c_ref}}</span>
+                    <span class="caret"></span>
+                    <span class="sr-only"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="reference">
+                      <li ng-repeat="ref in data.crossingList">
+                        <a ng-click="refClicked(ref.id)">{{ref.id}}</a>
+                      </li>
+                </ul>
+            </div>
+          </div>
+
+          <div class="input-group">
+              <span class="input-group-addon">Max. steps</span>
+              <input type="number" min="0" step="1" ng-model="data.steps" ng-pattern="/^[0-9]{1,7}$/"/>
+          </div>
+          <div class="input-group">
+              <span class="input-group-addon">Max. combinations</span>
+              <input type="number" min="0" step="1" ng-model="data.combs" ng-pattern="/^[0-9]{1,7}$/" />
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-primary" type="button" ng-click="runAcoGraank()">Run ACO-GRAANK</button>
+          <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+      </div>
+    </script>
+
+</div>
