@@ -133,11 +133,13 @@ gostApp
     }
 
     $scope.getDatastreamName = function(id){
+        var name = "";
         angular.forEach($scope.ds_data, function(value, key){
-            if(value.id === id){
-                return value.label;
+            if(value.id == id){
+                name = value.label;
             }
         });
+        return name;
     }
 
     var getObservations = function(data_model){
@@ -151,13 +153,14 @@ gostApp
             //1. Load selected datastreams' observations
             var res = $http.get(getUrl() + "/v1.0/Datastreams("+ value.id +")/Observations?$top=1000&$orderby=phenomenonTime desc&$select=id,phenomenonTime,result");
             res.success(function(data, status, headers, config) {
+                var dsName = $scope.getDatastreamName(value.id);
                 var observationList = data.value;
                 var tempList = [];
                 angular.forEach(observationList, function(val, k){
                     var tempObsv = {"time" : val['phenomenonTime'], "value" : val['result']};
                     tempList.push(tempObsv)
                 });
-                crossingList.push({id: value.id, name: $scope.getDatastreamName(value.id), observations: tempList});
+                crossingList.push({id: value.id, name: dsName, observations: tempList});
             });
             res.error(function(data, status, headers, config) {
                 var msg = "Data crossing failure: " + status;
