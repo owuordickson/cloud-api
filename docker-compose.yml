@@ -3,7 +3,7 @@ services:
     py-server:
         image: tiangolo/uwsgi-nginx:python3.6
         volumes:
-            - ./py_app:/app
+            - ./python_app:/app
         ports:
             - "8088:80"
     node-red:
@@ -42,8 +42,6 @@ services:
         build:
             context: ./custom_dash
             dockerfile: Dockerfile
-        volumes:
-            - ./custom_dash/content:/var/www/html
         ports:
             - "8080:8080"
         depends_on:
