@@ -12,12 +12,13 @@ import json
 from algorithms.fuzz_x import FuzzX
 from algorithms.init_data import InitData
 from algorithms.aco_grad import GradACO
+from data.sample_data import *
 
 
 def init_algorithm():
     try:
-        path = '../data/dataset.json'
-        obj = FuzzX(path)
+        input_data = get_sample_data()
+        obj = FuzzX(input_data)
         x_data = obj.cross_data()
         # print(obj.observation_list)
         # print(x_data)

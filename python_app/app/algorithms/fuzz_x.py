@@ -17,8 +17,8 @@ import skfuzzy as fuzzy
 
 class FuzzX:
 
-    def __init__(self, file_path):
-        json_data = FuzzX.read_json(file_path)
+    def __init__(self, input_data):
+        json_data = FuzzX.read_json(input_data)
         if "crossingList" in json_data:
             # true
             self.pattern = json_data["patternType"]
@@ -126,9 +126,9 @@ class FuzzX:
         return arr_pop.min(), arr_pop.max(), arr_diff.min()
 
     @staticmethod
-    def read_json(file):
-        with open(file, 'r') as f:
-            temp_data = json.load(f)
+    def read_json(data):
+        # with open(file, 'r') as f:
+        temp_data = json.loads(data)
         return temp_data
 
     @staticmethod

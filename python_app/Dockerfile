@@ -1,6 +1,7 @@
 # Pull a pre-built alpine docker image with nginx and python3 installed
 FROM tiangolo/uwsgi-nginx:python3.6
 
+# COPY /node /www
 COPY /app /app
 
 COPY requirements.txt /

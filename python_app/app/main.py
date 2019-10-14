@@ -13,6 +13,6 @@ def application(env, start_response):
         message = init_algorithm()
     except (ValueError):
         request_body_size = 0
-        message = json.dumps({"error":"error found"})
+        message = json.dumps({"success":"welcome to py-server API"})
 
     return str(message).encode("utf-8")
