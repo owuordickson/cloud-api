@@ -1,9 +1,9 @@
 version: '2'
 services:
     py-server:
-        image: tiangolo/uwsgi-nginx:python3.6
-        volumes:
-            - ./python_app:/app
+        build:
+            context: ./python_app
+            dockerfile: Dockerfile
         ports:
             - "8088:80"
     node-red:
