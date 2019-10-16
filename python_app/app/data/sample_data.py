@@ -1,6 +1,8 @@
+import json
+
 
 def get_sample_data():
-    sample_data = {
+    sample_data = json.dumps({
         "minSup": 0.5,
         "patternType": "gradual",
         "crossingList": [
@@ -90,5 +92,5 @@ def get_sample_data():
         "combs": 100,
         "m_rep": 0.5,
         "c_ref": 0
-    }
+    })
     return sample_data

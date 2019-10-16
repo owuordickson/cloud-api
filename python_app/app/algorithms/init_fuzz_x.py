@@ -12,16 +12,13 @@ import json
 from algorithms.fuzz_x import FuzzX
 from algorithms.init_data import InitData
 from algorithms.aco_grad import GradACO
-from data.sample_data import *
 
 
-def init_algorithm():
+def init_algorithm(input_data):
     try:
         input_data = get_sample_data()
         obj = FuzzX(input_data)
         x_data = obj.cross_data()
-        # print(obj.observation_list)
-        # print(x_data)
 
         d_set = InitData(x_data)
         if d_set.data:
@@ -29,35 +26,43 @@ def init_algorithm():
             max_combs = obj.combs
             min_supp = obj.min_sup
 
-            list_attr = list()
-            for txt in d_set.title:
-                text = str(txt[0]) + '. ' + txt[1]
-                var_attr = {"attribute": text}
-                list_attr.append(var_attr)
-                # print(var_attr)
-            # print("\nFile: " + "none")
-
             d_set.init_attributes(False)
             ac = GradACO(steps, max_combs, d_set)
             list_gp = ac.run_ant_colony(min_supp)
-            # print("\nPattern : Support")
+            list_gp.sort(key=lambda k: (k[0], k[1]), reverse=True)
+
             list_pattern = list()
-            for gp in list_gp[:5]:
-                pattern = str(gp[1])
-                support = str(gp[0])
-                var_pattern = {"pattern": pattern, "support": support}
-                list_pattern.append(var_pattern)
-                # print(var_pattern)
-            # p_data = ac.plot_pheromone_matrix()
-            # print(p_data)
-            json_response = json.dumps({"attributes": list_attr, "patterns": list_pattern})
-            return json_response
-            # print(json_response)
-            # print("\nPheromone Matrix")
-            # print(ac.p_matrix)
-            # ac.plot_pheromone_matrix()
+            for gp in list_gp[:4]:
+                pattern = gp[1]
+                support = gp[0]
+                plot_data = generate_plot_data(d_set.title, pattern)
+                list_pattern.append(([plot_data, "support:"+str(support)]))
+            figure = GradACO.plot_patterns(list_pattern)
+            return figure
     except Exception as error:
         print(error)
 
 
-init_algorithm()
+def generate_plot_data(list_title, list_pattern):
+    plot_data = list()
+    for pattern in list_pattern[:4]:
+        i = int(pattern[0])
+        name = get_attr_name(list_title, i)
+        value = 0
+        sign = pattern[1]
+        if sign == '-':
+            value = -1
+        elif sign == '+':
+            value = 1
+        var_temp = {name: value}
+        plot_data.append(var_temp)
+    return plot_data
+
+
+def get_attr_name(list_title, index):
+    name = ""
+    for title in list_title:
+        i = int(title[0])
+        if i == index:
+            return title[1]
+    return name

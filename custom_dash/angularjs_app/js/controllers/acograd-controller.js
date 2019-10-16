@@ -18,7 +18,7 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="results"><img src="images/Figure.png" width="420" height="400" /></div>',
+      template: '<div class="results"><img data-ng-src="data:image/png;base64,{{imageData}}"/></div>',
       link: function (scope, element, attr) {
             scope.$watch('results', function (val) {
                 if (val)
@@ -95,11 +95,12 @@ gostApp
             //saveAs(blob, "dataset.json");
 
             runPython(JSON.stringify(dataset)).then(function(resData){
+                //check if resData is fine then display, otherwise show message
+                $scope.imageData = resData
                 //stop spinner
                 $scope.loading = false;
                 $scope.results = true;
-                alert( "added: " + JSON.stringify(resData));
-                //check if resData is fine then display, otherwise show message
+                //alert( "added: " + JSON.stringify(resData));
             });
         });
     };
@@ -184,7 +185,7 @@ gostApp
         var res = $http.post(getUrl() + "/py1.0", dataset);
         res.success(function(data, status, headers, config) {
             var imgData = data;
-            msg = "+ : increasing and - : decreasing and x : irrelevant";
+            msg = "+ : increasing and - : decreasing";
             $scope.info_msg = msg;
             deferred.resolve(imgData);
         });

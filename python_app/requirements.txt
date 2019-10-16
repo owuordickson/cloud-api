@@ -1,4 +1,5 @@
 matplotlib
 python-dateutil
 numpy
+pandas
 scikit-fuzzy
