@@ -12,6 +12,7 @@ import json
 from algorithms.fuzz_x import FuzzX
 from algorithms.init_data import InitData
 from algorithms.aco_grad import GradACO
+from data.sample_data import *
 
 
 def init_algorithm(input_data):
