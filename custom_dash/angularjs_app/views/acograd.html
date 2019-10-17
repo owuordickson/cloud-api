@@ -5,15 +5,15 @@
               <div class="row">
                   <div class="col-md-4">
                       <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <h2>Datastreams</h2>
                         </div>
                         <div class="col-md-2">
                           <div ng-dropdown-multiselect="" options="ds_data" selected-model="ds_model" checkboxes="true" extra-settings="ds_settings"></div>
                         </div>
                       </div>
-                    </div>
-                  <div class="col-md-6">
+                  </div>
+                  <div class="col-md-8">
                     <div class="btn-group">
                       <div class="btn-group" uib-dropdown>
                           <button id="pattern_type" type="button" class="btn btn-primary" uib-dropdown-toggle>
@@ -76,6 +76,9 @@
               </div>
               <div class="row">
                 <p>{{info_msg}}</p>
+              </div>
+              <div class="row">
+                <download></download>
               </div>
             </div>
         </div>

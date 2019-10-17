@@ -18,7 +18,7 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="results"><button class="btn btn-warning" type="button" ng-click="downloadImage()"><img data-ng-src="{{getImage(imageData)}}" width="640"/></div>',
+      template: '<div class="results"><img data-ng-src="{{image}}" width="640" /></div>',
       link: function (scope, element, attr) {
             scope.$watch('results', function (val) {
                 if (val)
@@ -29,7 +29,25 @@ gostApp
       }
     }
 })
-.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, Blob, $timeout) {
+.directive('download', function () {
+    return {
+      restrict: 'E',
+      replace:true,
+      scope: {
+        image: '='
+      },
+      template: '<div class="download"><button ng-click="image.download()">Download results</button></div>',
+      link: function (scope, element, attr) {
+            scope.$watch('download', function (val) {
+                if (val)
+                    $(element).show();
+                else
+                    $(element).hide();
+            });
+      }
+    }
+})
+.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeout) {
     $scope.Page.setTitle('GRADUAL PATTERNS');
     $scope.Page.setHeaderIcon(iconAcograd);
 
@@ -55,8 +73,7 @@ gostApp
         enableSearch: true
     };
 
-    $scope.loading = false;
-    $scope.results = false;
+    $scope.cancelLoading();
 
     $http.get(getUrl() + "/v1.0/Datastreams?$select=id,name").then(function (response) {
         $scope.datastreamsList = response.data.value;
@@ -88,18 +105,12 @@ gostApp
         });
 
         modalInstance.result.then(function(dataset){
-            //$scope.loading = false;
-            //$scope.results = true;
-            
-            //var blob = new Blob([JSON.stringify(dataset)], {type : 'application/json'});
-            //saveAs(blob, "dataset.json");
 
-            runPython(JSON.stringify(dataset)).then(function(resData){
+            runPython(JSON.stringify(dataset)).then(function(imageData){
                 //check if resData is fine then display, otherwise show message
-                $scope.imageData = resData
+                $scope.image = {figure: $scope.getImage(imageData), download: download};
                 //stop spinner
-                $scope.loading = false;
-                $scope.results = true;
+                $scope.showResults();
                 //alert( "added: " + JSON.stringify(resData));
             });
         });
@@ -114,14 +125,13 @@ gostApp
             getObservations($scope.ds_model).then(function(crossingList){
                 $scope.newParams.crossingList = crossingList;
                 //stop spinner
-                $scope.loading = false;
-                $scope.results = false;
+                $scope.cancelLoading();
 
                 //2. Request for extraction of gradual patterns
                 if($scope.newParams.patternType === "gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('gradualContent.html');
-                }else if($scope.newParams.patternType === "emerging"){
+                }else if($scope.newParams.patternType === "temporal gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('emergingContent.html');
                 }else{
@@ -144,19 +154,17 @@ gostApp
     }
 
     $scope.getImage = function(data){
-        return 'data:image/jpeg;base64,' + data;
+        return 'data:image/png;base64,' + data;
     }
 
-    $scope.downloadImage = function() {
-        img = $scope.getImage($scope.imageData);
-        var data = new Blob([img], { type: 'img/png;charset=utf-8' });
-        saveAs(data, 'results.png');
+    var download = function() {
+        saveAs(this.figure, 'results.png');
     }
 
     var getObservations = function(data_model){
         // start spinner
-        $scope.loading = true;
-        $scope.results = false;
+        $scope.startLoading();
+
         var crossingList = [];
         var deferred = $q.defer();
 
@@ -175,8 +183,7 @@ gostApp
             });
             res.error(function(data, status, headers, config) {
                 var msg = "Data crossing failure: " + status;
-                $scope.loading = false;
-                $scope.results = false;
+                $scope.cancelLoading();
                 //alert(msg);
                 $scope.info_msg = msg;
                 deferred.reject(msg);
@@ -188,8 +195,8 @@ gostApp
 
     var runPython = function(dataset){
         //start spinner
-        $scope.loading = true;
-        $scope.results = false;
+        $scope.startLoading();
+
         var deferred = $q.defer();
 
         var res = $http.post(getUrl() + "/py1.0", dataset);
@@ -202,13 +209,30 @@ gostApp
         res.error(function(data, status, headers, config) {
             //var msg = "Python API failure: "  + JSON.stringify(config);
             var msg = "Python API failure: "  + status;
-            $scope.loading = false;
-            $scope.results = false;
+            $scope.cancelLoading();
             //alert(msg);
             $scope.info_msg = msg;
             deferred.reject(msg);
         });
         return deferred.promise;
+    }
+
+    $scope.startLoading = function(){
+        $scope.loading = true;
+        $scope.results = false;
+        $scope.download = false;
+    }
+
+    $scope.cancelLoading = function(){
+        $scope.loading = false;
+        $scope.results = false;
+        $scope.download = false;
+    }
+
+    $scope.showResults = function(){
+        $scope.loading = false;
+        $scope.results = true;
+        $scope.download = true;
     }
 
 });
