@@ -250,12 +250,13 @@ class GradACO:
                      yticks=[-1, 1], yticklabels=['-', '+'])
         else:
             plt.title("No Patterns Found")
-        # plt.show()
         fig_bytes = BytesIO()
         plt.savefig(fig_bytes, format='png')
         fig_bytes.seek(0)  # rewind to beginning of file
-        fig_base64 = base64.b64encode(fig_bytes.getvalue())
-        return fig_base64
+        buffer = b''.join(fig_bytes)
+        fig_base64 = base64.b64encode(buffer)
+        img_data = fig_base64.decode('utf-8')
+        return img_data
 
     @staticmethod
     def check_anti_monotony(lst_p, p_arr, ck_sub):

@@ -18,7 +18,7 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="results"><img data-ng-src="data:image/png;base64,{{imageData}}"/></div>',
+      template: '<div class="results"><button class="btn btn-warning" type="button" ng-click="downloadImage()"><img data-ng-src="{{getImage(imageData)}}" width="640"/></div>',
       link: function (scope, element, attr) {
             scope.$watch('results', function (val) {
                 if (val)
@@ -29,7 +29,7 @@ gostApp
       }
     }
 })
-.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, $timeout) {
+.controller('AcoGradCtrl', function ($scope, $http, $uibModal, $q, Blob, $timeout) {
     $scope.Page.setTitle('GRADUAL PATTERNS');
     $scope.Page.setHeaderIcon(iconAcograd);
 
@@ -141,6 +141,16 @@ gostApp
             }
         });
         return name;
+    }
+
+    $scope.getImage = function(data){
+        return 'data:image/jpeg;base64,' + data;
+    }
+
+    $scope.downloadImage = function() {
+        img = $scope.getImage($scope.imageData);
+        var data = new Blob([img], { type: 'img/png;charset=utf-8' });
+        saveAs(data, 'results.png');
     }
 
     var getObservations = function(data_model){
