@@ -14,35 +14,28 @@ gostApp
       }
     }
 })
-.directive('viewPatterns', function () {
+.directive('results', function () {
     return {
       restrict: 'E',
       replace:true,
-      scope: {
-        image: '='
-      },
-      //template: '<div class="viewPatterns"><img src="images/Figure.png" /></div>',
-      template: '<div class="viewPatterns"><img data-ng-src="{{image.figure}}"/></div>',
+      template: '<div class="results"><img data-ng-src="{{image.figure}}"/></div>',
       link: function (scope, element, attr) {
-            scope.$watch('viewPatterns', function (val) {
+            scope.$watch('results', function (val) {
                 if (val)
                     $(element).show();
                 else
-                    $(element).hide();
+                    $(element).show();
             });
       }
     }
 })
-.directive('allowDownload', function () {
+.directive('downloads', function () {
     return {
       restrict: 'E',
       replace:true,
-      scope: {
-        image: '='
-      },
-      template: '<div class="allowDownload"><button ng-click="image.download()">Download results</button></div>',
+      template: '<div class="downloads"><button ng-click="image.download()">Download results</button></div>',
       link: function (scope, element, attr) {
-            scope.$watch('allowDownload', function (val) {
+            scope.$watch('downloads', function (val) {
                 if (val)
                     $(element).show();
                 else
@@ -109,9 +102,7 @@ gostApp
           }
         });
 
-        modalInstance.result.then(function(dataset){
-            //showProgress(false);
-            
+        modalInstance.result.then(function(dataset){            
             //var blob = new Blob([JSON.stringify(dataset)], {type : 'application/json'});
             //saveAs(blob, "dataset.json");
 
@@ -165,7 +156,7 @@ gostApp
     }
 
     $scope.getImage = function(data){
-        return 'data:image/jpeg;base64,' + data;
+        return 'data:image/png;base64,' + data;
     }
 
     var download = function() {
@@ -230,14 +221,14 @@ gostApp
     var showProgress = function(val){
         $scope.loading = val;
         
-        $scope.viewPatterns = false;
-        $scope.allowDownload = false;
+        $scope.results = false;
+        $scope.downloads = false;
     }
 
     var showPatterns = function(){
         $scope.loading = false;
-        $scope.viewPatterns = true;
-        $scope.allowDownload = true;
+        $scope.results = true;
+        $scope.downloads = true;
     }
 
 });
