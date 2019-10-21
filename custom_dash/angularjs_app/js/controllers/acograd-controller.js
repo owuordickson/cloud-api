@@ -18,11 +18,11 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      //scope: {
-      //  image: '='
-      //},
-      template: '<div class="viewPatterns"><img src="images/Figure.png" /></div>',
-      //template: '<div class="viewPatterns"><img data-ng-src="data:image/png;base64,{{imageData}}"/></div>',
+      scope: {
+        image: '='
+      },
+      //template: '<div class="viewPatterns"><img src="images/Figure.png" /></div>',
+      template: '<div class="viewPatterns"><img data-ng-src="{{image.figure}}"/></div>',
       link: function (scope, element, attr) {
             scope.$watch('viewPatterns', function (val) {
                 if (val)
