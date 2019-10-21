@@ -18,13 +18,13 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="results"><img data-ng-src="{{image.figure}}"/></div>',
+      template: '<div class="results"><img data-ng-src="data:image/png;base64,{{image.base64Img}}"/></div>',
       link: function (scope, element, attr) {
             scope.$watch('results', function (val) {
                 if (val)
                     $(element).show();
                 else
-                    $(element).show();
+                    $(element).hide();
             });
       }
     }
@@ -70,7 +70,7 @@ gostApp
         enableSearch: true
     };
 
-    $scope.image = {figure: "", download: download};
+    $scope.image = {base64Img: "", download: download};
 
     $http.get(getUrl() + "/v1.0/Datastreams?$select=id,name").then(function (response) {
         $scope.datastreamsList = response.data.value;
@@ -108,8 +108,7 @@ gostApp
 
             runPython(JSON.stringify(dataset)).then(function(resData){
                 //check if resData is fine then display, otherwise show message
-                $scope.imageData = resData
-                $scope.image = {figure: $scope.getImage(resData), download: download};
+                $scope.image = {base64Img: resData, download: download};
                 //stop spinner
                 //showProgress(false);
                 showPatterns();
@@ -153,14 +152,6 @@ gostApp
             }
         });
         return name;
-    }
-
-    $scope.getImage = function(data){
-        return 'data:image/png;base64,' + data;
-    }
-
-    var download = function() {
-        saveAs(this.figure, 'results.png');
     }
 
     var getObservations = function(data_model){
@@ -216,6 +207,36 @@ gostApp
             deferred.reject(msg);
         });
         return deferred.promise;
+    }
+
+    var download = function() {
+        //alert(this.base64Img);
+        var blob = b64toBlob(this.base64Img, 'image/png');
+        saveAs(blob, 'results.png');
+    }
+
+    var b64toBlob = function(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+      
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+      
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          var slice = byteCharacters.slice(offset, offset + sliceSize);
+      
+          var byteNumbers = new Array(slice.length);
+          for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+      
+          var byteArray = new Uint8Array(byteNumbers);
+      
+          byteArrays.push(byteArray);
+        }
+          
+        var blob = new Blob(byteArrays, {type: contentType});
+        return blob;
     }
 
     var showProgress = function(val){
