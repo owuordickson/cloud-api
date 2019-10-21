@@ -18,7 +18,11 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="viewPatterns"><img data-ng-src="{{image.figure}}" width="640" /></div>',
+      //scope: {
+      //  image: '='
+      //},
+      template: '<div class="viewPatterns"><img src="images/Figure.png" /></div>',
+      //template: '<div class="viewPatterns"><img data-ng-src="data:image/png;base64,{{imageData}}"/></div>',
       link: function (scope, element, attr) {
             scope.$watch('viewPatterns', function (val) {
                 if (val)
@@ -55,7 +59,7 @@ gostApp
     $scope.info_title = "information";
     $scope.info_msg = "click 'execute' button to cross different datastreams";
     $scope.supports = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
-    $scope.patterns = ["gradual","temporal gradual", "temporal emerging"];
+    $scope.patterns = ["gradual", "temporal gradual", "temporal emerging"];
 
     $scope.newParams = {};
     $scope.newParams.minSup = 0.5;
@@ -66,21 +70,21 @@ gostApp
     $scope.ds_data = [];
     $scope.observationList = [];
     $scope.datastreamsList = [];
+
     $scope.ds_settings = {
         scrollableHeight: '200px',
         scrollable: true,
         enableSearch: true
     };
 
-    $scope.image = {figure: "images/loading.gif", download: download};
-
-    $scope.cancelLoading();
+    $scope.image = {figure: "", download: download};
 
     $http.get(getUrl() + "/v1.0/Datastreams?$select=id,name").then(function (response) {
         $scope.datastreamsList = response.data.value;
         angular.forEach($scope.datastreamsList, function(value, key){
             $scope.ds_data.push({id: value['@iot.id'], label: value['name']});
         });
+        showProgress(false);
     });
 
     $scope.supportClicked = function(sel_sup){
@@ -106,12 +110,18 @@ gostApp
         });
 
         modalInstance.result.then(function(dataset){
+            //showProgress(false);
+            
+            //var blob = new Blob([JSON.stringify(dataset)], {type : 'application/json'});
+            //saveAs(blob, "dataset.json");
 
-            runPython(JSON.stringify(dataset)).then(function(imageData){
+            runPython(JSON.stringify(dataset)).then(function(resData){
                 //check if resData is fine then display, otherwise show message
-                $scope.image = {figure: $scope.getImage(imageData), download: download};
+                $scope.imageData = resData
+                $scope.image = {figure: $scope.getImage(resData), download: download};
                 //stop spinner
-                $scope.showResults();
+                //showProgress(false);
+                showPatterns();
                 //alert( "added: " + JSON.stringify(resData));
             });
         });
@@ -126,13 +136,13 @@ gostApp
             getObservations($scope.ds_model).then(function(crossingList){
                 $scope.newParams.crossingList = crossingList;
                 //stop spinner
-                $scope.cancelLoading();
+                showProgress(false);
 
                 //2. Request for extraction of gradual patterns
                 if($scope.newParams.patternType === "gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('gradualContent.html');
-                }else if($scope.newParams.patternType === "temporal gradual"){
+                }else if($scope.newParams.patternType === "emerging"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('emergingContent.html');
                 }else{
@@ -155,7 +165,7 @@ gostApp
     }
 
     $scope.getImage = function(data){
-        return 'data:image/png;base64,' + data;
+        return 'data:image/jpeg;base64,' + data;
     }
 
     var download = function() {
@@ -164,7 +174,7 @@ gostApp
 
     var getObservations = function(data_model){
         // start spinner
-        $scope.startLoading();
+        showProgress(true);
 
         var crossingList = [];
         var deferred = $q.defer();
@@ -184,7 +194,7 @@ gostApp
             });
             res.error(function(data, status, headers, config) {
                 var msg = "Data crossing failure: " + status;
-                $scope.cancelLoading();
+                showProgress(false);
                 //alert(msg);
                 $scope.info_msg = msg;
                 deferred.reject(msg);
@@ -196,8 +206,7 @@ gostApp
 
     var runPython = function(dataset){
         //start spinner
-        $scope.startLoading();
-
+        showProgress(true);
         var deferred = $q.defer();
 
         var res = $http.post(getUrl() + "/py1.0", dataset);
@@ -210,7 +219,7 @@ gostApp
         res.error(function(data, status, headers, config) {
             //var msg = "Python API failure: "  + JSON.stringify(config);
             var msg = "Python API failure: "  + status;
-            $scope.cancelLoading();
+            showProgress(false)
             //alert(msg);
             $scope.info_msg = msg;
             deferred.reject(msg);
@@ -218,19 +227,14 @@ gostApp
         return deferred.promise;
     }
 
-    $scope.startLoading = function(){
-        $scope.loading = true;
+    var showProgress = function(val){
+        $scope.loading = val;
+        
         $scope.viewPatterns = false;
         $scope.allowDownload = false;
     }
 
-    $scope.cancelLoading = function(){
-        $scope.loading = false;
-        $scope.viewPatterns = false;
-        $scope.allowDownload = false;
-    }
-
-    $scope.showResults = function(){
+    var showPatterns = function(){
         $scope.loading = false;
         $scope.viewPatterns = true;
         $scope.allowDownload = true;
