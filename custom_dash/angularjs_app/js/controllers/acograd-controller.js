@@ -18,7 +18,7 @@ gostApp
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="results"><img data-ng-src="data:image/png;base64,{{image.base64Img}}"/></div>',
+      template: '<div class="results"><img data-ng-src="data:image/png;base64,{{image.base64Img}}" width="640"/></div>',
       link: function (scope, element, attr) {
             scope.$watch('results', function (val) {
                 if (val)
