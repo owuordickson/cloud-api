@@ -14,13 +14,13 @@ gostApp
       }
     }
 })
-.directive('results', function () {
+.directive('viewPatterns', function () {
     return {
       restrict: 'E',
       replace:true,
-      template: '<div class="results"><img data-ng-src="{{image}}" width="640" /></div>',
+      template: '<div class="viewPatterns"><img data-ng-src="{{image.figure}}" width="640" /></div>',
       link: function (scope, element, attr) {
-            scope.$watch('results', function (val) {
+            scope.$watch('viewPatterns', function (val) {
                 if (val)
                     $(element).show();
                 else
@@ -29,16 +29,16 @@ gostApp
       }
     }
 })
-.directive('download', function () {
+.directive('allowDownload', function () {
     return {
       restrict: 'E',
       replace:true,
       scope: {
         image: '='
       },
-      template: '<div class="download"><button ng-click="image.download()">Download results</button></div>',
+      template: '<div class="allowDownload"><button ng-click="image.download()">Download results</button></div>',
       link: function (scope, element, attr) {
-            scope.$watch('download', function (val) {
+            scope.$watch('allowDownload', function (val) {
                 if (val)
                     $(element).show();
                 else
@@ -66,12 +66,13 @@ gostApp
     $scope.ds_data = [];
     $scope.observationList = [];
     $scope.datastreamsList = [];
-
     $scope.ds_settings = {
         scrollableHeight: '200px',
         scrollable: true,
         enableSearch: true
     };
+
+    $scope.image = {figure: "images/loading.gif", download: download};
 
     $scope.cancelLoading();
 
@@ -219,20 +220,20 @@ gostApp
 
     $scope.startLoading = function(){
         $scope.loading = true;
-        $scope.results = false;
-        $scope.download = false;
+        $scope.viewPatterns = false;
+        $scope.allowDownload = false;
     }
 
     $scope.cancelLoading = function(){
         $scope.loading = false;
-        $scope.results = false;
-        $scope.download = false;
+        $scope.viewPatterns = false;
+        $scope.allowDownload = false;
     }
 
     $scope.showResults = function(){
         $scope.loading = false;
-        $scope.results = true;
-        $scope.download = true;
+        $scope.viewPatterns = true;
+        $scope.allowDownload = true;
     }
 
 });

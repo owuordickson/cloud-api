@@ -9,13 +9,13 @@
   /*width:80px;*/
 }
 
-.results {
+.viewPatterns {
   padding: 0;
   margin: 0;
   background-color: transparent;
 }
 
-.download {
+.allowDownload {
   padding: 0;
   margin: 0;
   background-color: transparent;
