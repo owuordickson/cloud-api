@@ -1,6 +1,6 @@
 version: '2'
 services:
-    py-server:
+    graank:
         build:
             context: ./python_app
             dockerfile: Dockerfile
@@ -46,7 +46,7 @@ services:
             - "8080:8080"
         depends_on:
             - gost
-            - py-server
+            - graank
 volumes:
     postgis: {}
     nodered: {}
