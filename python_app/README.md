@@ -4,7 +4,7 @@ This application is served by uWSGI:NGINX server and it receives HTTP POST reque
 ### Usage
 Below is a sample of how the JSON body of the request should look like:
 
-'''
+```
 
 {
     "patternType": "gradual",
@@ -45,4 +45,4 @@ Below is a sample of how the JSON body of the request should look like:
     ]
 }
 
-'''
+```
