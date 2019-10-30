@@ -13,7 +13,7 @@ Below is a sample of how the JSON body of the request should look like:
     "combs": 100,
     "m_rep": 0.5,
     "c_ref": 0,
-    "crossingList": [
+    "datastreams": [
         {
             "id": 12,
             "name": "air humidity",

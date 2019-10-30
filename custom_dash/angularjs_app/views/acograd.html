@@ -93,7 +93,7 @@
       <div class="modal-body" id="modal-body">
           Datastreams selected: 
           <ul> 
-              <li ng-repeat="ds in data.crossingList">
+              <li ng-repeat="ds in data.datastreams">
                 <a>{{ds.id}}</a>
               </li>
           </ul>
@@ -123,7 +123,7 @@
       <div class="modal-body" id="modal-body">
           Datastreams selected: 
           <ul> 
-              <li ng-repeat="ds in data.crossingList">
+              <li ng-repeat="ds in data.datastreams">
                 <a>{{ds.id}}</a>
               </li>
           </ul>
@@ -153,7 +153,7 @@
                     <span class="sr-only"></span>
                 </button>
                 <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="reference">
-                      <li ng-repeat="ref in data.crossingList">
+                      <li ng-repeat="ref in data.datastreams">
                         <a ng-click="refClicked(ref.id)">{{ref.id}}</a>
                       </li>
                 </ul>

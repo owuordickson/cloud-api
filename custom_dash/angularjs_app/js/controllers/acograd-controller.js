@@ -57,7 +57,7 @@ gostApp
     $scope.newParams = {};
     $scope.newParams.minSup = 0.5;
     $scope.newParams.patternType = "gradual";
-    $scope.newParams.crossingList = null;
+    $scope.newParams.datastreams = null;
 
     $scope.ds_model = [];
     $scope.ds_data = [];
@@ -118,13 +118,13 @@ gostApp
     };
 
     $scope.initData = function(){
-        $scope.newParams.crossingList = [];
+        $scope.newParams.datastreams = [];
         if($scope.ds_model.length <= 1){
             alert("Error: select atleast 2 datastreams");
         }else{
             // fetch datastream observations
             getObservations($scope.ds_model).then(function(crossingList){
-                $scope.newParams.crossingList = crossingList;
+                $scope.newParams.datastreams = crossingList;
                 //stop spinner
                 showProgress(false);
 
