@@ -18,7 +18,7 @@ fi
 echo "
 client_body_buffer_size 		10K;
 client_header_buffer_size 		1k;
-client_max_body_size 			8m;
+client_max_body_size 			1024m;
 large_client_header_buffers 	2 1k;
 client_body_timeout 			12;
 client_header_timeout 			12;
@@ -108,7 +108,7 @@ echo "
 
 	location /py1.0 {
 		include uwsgi_params;
-		uwsgi_pass py-server:8088;
+		uwsgi_pass graank:8088;
 	}
 
     location = /favicon.ico { access_log off; log_not_found off; }

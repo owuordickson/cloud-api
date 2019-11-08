@@ -102,7 +102,7 @@ gostApp
           }
         });
 
-        modalInstance.result.then(function(dataset){            
+        modalInstance.result.then(function(dataset){
             //var blob = new Blob([JSON.stringify(dataset)], {type : 'application/json'});
             //saveAs(blob, "dataset.json");
 
@@ -140,7 +140,7 @@ gostApp
                     alert(msg);
                     $scope.info_msg = msg;
                 }
-            });              
+            });
         }
     }
 
@@ -162,7 +162,7 @@ gostApp
         var deferred = $q.defer();
 
         angular.forEach(data_model, function(value, key){
-            //1. Load selected datastreams' observations
+            //1. Load selected datastreams' observations - will change after resetting POST size
             var res = $http.get(getUrl() + "/v1.0/Datastreams("+ value.id +")/Observations?$top=1000&$orderby=phenomenonTime desc&$select=id,phenomenonTime,result");
             res.success(function(data, status, headers, config) {
                 var dsName = $scope.getDatastreamName(value.id);
@@ -218,30 +218,30 @@ gostApp
     var b64toBlob = function(b64Data, contentType, sliceSize) {
         contentType = contentType || '';
         sliceSize = sliceSize || 512;
-      
+
         var byteCharacters = atob(b64Data);
         var byteArrays = [];
-      
+
         for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
           var slice = byteCharacters.slice(offset, offset + sliceSize);
-      
+
           var byteNumbers = new Array(slice.length);
           for (var i = 0; i < slice.length; i++) {
             byteNumbers[i] = slice.charCodeAt(i);
           }
-      
+
           var byteArray = new Uint8Array(byteNumbers);
-      
+
           byteArrays.push(byteArray);
         }
-          
+
         var blob = new Blob(byteArrays, {type: contentType});
         return blob;
     }
 
     var showProgress = function(val){
         $scope.loading = val;
-        
+
         $scope.results = false;
         $scope.downloads = false;
     }
