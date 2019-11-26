@@ -12,5 +12,7 @@ Use it a command line program with the local package:<br>
 $docker-compose up
 ```
 
+Then, go to your <em>Browser</em> and jump to (http://localhost:8080)
+
 ### References
 * Dickson Owuor, Anne Laurent, and Joseph Orero (2019). Mining Fuzzy-temporal Gradual Patterns. In the proceedings of the 2019 IEEE International Conference on Fuzzy Systems (FuzzIEEE). IEEE. doi:10.1109/FUZZ-IEEE.2019.8858883
