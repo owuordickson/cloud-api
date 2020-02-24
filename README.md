@@ -6,17 +6,17 @@ A Docker implementation of OGC/SensorThings API with gradual pattern mining tool
 
 ## Requirements
 
-You will be required to install [Element: em] Yes <em>Docker</em>
+You will be required to install **Docker**
 
 ## Usage
 
 Use a command line program with the local package:
 
-```
+``` shell
 $docker-compose up
 ```
 
-Then, launch your <em>Browser</em> and go to: <http://localhost:8080>
+Then, launch your *Browser* and go to: <http://localhost:8080>
 
 ## References
 
