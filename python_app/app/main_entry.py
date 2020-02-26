@@ -55,6 +55,7 @@ def init_request(req_data):
                     plot_data = generate_plot_data(title, pattern)
                     list_pattern.append(([plot_data, "support:"+str(support)+"\ntime lag:"+str(time_lag)]))
         figure = plot_patterns(list_pattern)
+        # print(figure)
         return figure
     except Exception as error:
         raise ValueError(error)
@@ -111,7 +112,7 @@ def init_acotgrad(data, minSup, minRep, refItem):
 
 def generate_plot_data(list_title, list_pattern):
     plot_data = list()
-    for pattern in list_pattern[:4]:
+    for pattern in list_pattern:
         i = int(pattern[0])
         name = get_attr_name(list_title, i)
         value = 0
