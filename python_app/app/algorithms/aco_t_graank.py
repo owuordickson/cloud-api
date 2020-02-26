@@ -32,7 +32,10 @@ class TgradACO:
             self.time_ok = True
             self.time_cols = cols
             self.min_sup = min_sup
-            self.ref_item = 1  # ref_item
+            if ref_item > 1:
+                self.ref_item = ref_item
+            else:
+                self.ref_item = 1
             self.max_step = self.get_max_step(min_rep)
             self.orig_attr_data = d_set.attr_data
             self.cores = cores

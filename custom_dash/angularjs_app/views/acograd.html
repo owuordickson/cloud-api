@@ -100,14 +100,14 @@
           <p>Pattern type: {{data.patternType}}</p>
           <p>Minimum support: {{data.minSup}}</p>
           
-          <div class="input-group">
+          <!--div class="input-group">
               <span class="input-group-addon">Max. steps</span>
               <input type="number" min="0" step="1" ng-model="data.steps" ng-pattern="/^[0-9]{1,7}$/"/>
           </div>
           <div class="input-group">
               <span class="input-group-addon">Max. combinations</span>
               <input type="number" min="0" step="1" ng-model="data.combs" ng-pattern="/^[0-9]{1,7}$/" />
-          </div>
+          </div-->
       </div>
       <div class="modal-footer">
           <button class="btn btn-primary" type="button" ng-click="runAcoGraank()">Run ACO-GRAANK</button>
@@ -118,7 +118,7 @@
     <script type="text/ng-template" id="emergingContent.html">
       <div class="modal-header">
           <button type="button" class="close" ng-click="cancel()">&times;</button>
-          <h4 class="modal-title" id="modal-title"><i class="fa fa-balance-scale"></i> EXTRACT EMERGING GRADUAL PATTERNS</h4>
+          <h4 class="modal-title" id="modal-title"><i class="fa fa-balance-scale"></i> EXTRACT TEMPORAL GRADUAL PATTERNS</h4>
       </div>
       <div class="modal-body" id="modal-body">
           Datastreams selected: 
@@ -160,14 +160,14 @@
             </div>
           </div>
 
-          <div class="input-group">
+          <!--div class="input-group">
               <span class="input-group-addon">Max. steps</span>
               <input type="number" min="0" step="1" ng-model="data.steps" ng-pattern="/^[0-9]{1,7}$/"/>
           </div>
           <div class="input-group">
               <span class="input-group-addon">Max. combinations</span>
               <input type="number" min="0" step="1" ng-model="data.combs" ng-pattern="/^[0-9]{1,7}$/" />
-          </div>
+          </div-->
       </div>
       <div class="modal-footer">
           <button class="btn btn-primary" type="button" ng-click="runAcoGraank()">Run ACO-GRAANK</button>
