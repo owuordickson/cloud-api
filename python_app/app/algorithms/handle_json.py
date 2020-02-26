@@ -9,7 +9,7 @@
 @modified: "26 February 2020",
 
 """
-from handle_data import HandleData
+from algorithms.handle_data import HandleData
 
 
 class InitData(HandleData):

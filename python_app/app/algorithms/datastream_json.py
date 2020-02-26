@@ -9,7 +9,7 @@
 
 """
 
-from datastream import DataStream
+from algorithms.datastream import DataStream
 
 
 class DataStream_j(DataStream):

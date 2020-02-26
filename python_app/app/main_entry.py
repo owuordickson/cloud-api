@@ -23,10 +23,11 @@ from algorithms.aco_t_graank import TgradACO
 
 def init_request(req_data):
     try:
-        json_data = read_json(req_data)
+        json_data = read_ogc_json(req_data)
+        # json_data = read_json()
         pattern = json_data["patternType"]
         min_sup = json_data["minSup"]
-        #datastreams = json_data["datastreams"]
+        # datastreams = json_data["datastreams"]
         x_data = cross_data(json_data)
         if pattern == "gradual":
             title, list_gp = init_acograd(x_data, min_sup)
@@ -40,6 +41,8 @@ def init_request(req_data):
             ref_col = json_data["c_ref"]
             min_rep = json_data["m_rep"]
             title, list_tgp = init_acotgrad(x_data, min_sup, min_rep, ref_col)
+            print(title)
+            print(list_tgp)
             list_pattern = list()
             count = 0
             for obj in list_tgp:
@@ -56,13 +59,18 @@ def init_request(req_data):
         figure = plot_patterns(list_pattern)
         return figure
     except Exception as error:
-        #print error
         raise ValueError(error)
 
 
-def read_json(data):
+def read_ogc_json(data):
     # with open(file, 'r') as f:
     temp_data = json.loads(data)
+    return temp_data
+
+
+def read_json(file='dataset.json'):
+    with open(file, 'r') as f:
+        temp_data = json.load(f)
     return temp_data
 
 
@@ -102,9 +110,6 @@ def init_acotgrad(data, minSup, minRep, refItem):
         return d_set.title, list_tgp
     else:
         raise Exception("Mining Error: Unable to fetch temporal gradual patterns")
-
-
-    return "title", list()
 
 
 def generate_plot_data(list_title, list_pattern):
@@ -204,3 +209,6 @@ def plot_patterns(list_pattern):
     fig_base64 = base64.b64encode(buffer)
     img_data = fig_base64.decode('utf-8')
     return img_data
+
+
+init_request("")

@@ -16,9 +16,9 @@ Description: updated version that uses aco-graank and parallel multi-processing
 # from joblib import Parallel, delayed
 import multiprocessing as mp
 # from src import HandleData, GradACO, InitParallel
-from aco_grad import GradACO
-from handle_data import HandleData
-from multiprocess import InitParallel
+from algorithms.aco_grad import GradACO
+from algorithms.handle_data import HandleData
+from algorithms.multiprocess import InitParallel
 
 
 class TgradACO:
@@ -32,7 +32,7 @@ class TgradACO:
             self.time_ok = True
             self.time_cols = cols
             self.min_sup = min_sup
-            self.ref_item = ref_item
+            self.ref_item = 1  # ref_item
             self.max_step = self.get_max_step(min_rep)
             self.orig_attr_data = d_set.attr_data
             self.cores = cores

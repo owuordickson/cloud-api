@@ -9,9 +9,9 @@
 @modified: "26 February 2020"
 
 """
-from multiprocess import InitParallel
-from tx_csv import FuzzTX
-from datastream_json import DataStream_j
+from algorithms.multiprocess import InitParallel
+from algorithms.tx_csv import FuzzTX
+from algorithms.datastream_json import DataStream_j
 
 
 class FuzzTXj(FuzzTX):
