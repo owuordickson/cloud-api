@@ -209,6 +209,3 @@ def plot_patterns(list_pattern):
     fig_base64 = base64.b64encode(buffer)
     img_data = fig_base64.decode('utf-8')
     return img_data
-
-
-init_request("")

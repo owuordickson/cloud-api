@@ -1,7 +1,7 @@
+import json
 # import sys
 # from algorithms.init_fuzz_x import *
 from main_entry import init_request
-import json
 
 
 def application(env, start_response):
