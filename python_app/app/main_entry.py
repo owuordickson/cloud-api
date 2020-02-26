@@ -41,8 +41,6 @@ def init_request(req_data):
             ref_col = json_data["c_ref"]
             min_rep = json_data["m_rep"]
             title, list_tgp = init_acotgrad(x_data, min_sup, min_rep, ref_col)
-            print(title)
-            print(list_tgp)
             list_pattern = list()
             count = 0
             for obj in list_tgp:
@@ -105,8 +103,7 @@ def init_acotgrad(data, minSup, minRep, refItem):
         tgp = TgradACO(d_set, refItem, minSup, minRep, 1)
         list_tgp = tgp.run_tgraank(parallel=True)
         list_tgp = list(filter(bool, list_tgp))
-        if len(list_tgp) > 5:
-            list_tgp.sort(key=lambda k: (k[0][0], k[0][1]), reverse=True)
+        list_tgp.sort(key=lambda k: (k[0][0], k[0][1]), reverse=True)
         return d_set.title, list_tgp
     else:
         raise Exception("Mining Error: Unable to fetch temporal gradual patterns")
@@ -153,7 +150,7 @@ def plot_patterns(list_pattern):
         plt.xticks([], [])
         plt.text(0, 1.8, list_pattern[count][1])
     elif num == 2:
-        fig_, axes = plt.subplots(2)
+        fig, axes = plt.subplots(2)
         for r in range(2):
             df = pandas.DataFrame(list_pattern[count][0])
             my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(df)))
@@ -168,7 +165,7 @@ def plot_patterns(list_pattern):
             count += 1
         plt.setp(axes, xticks=[], xticklabels=[], yticks=[-1, 1], yticklabels=['-', '+'])
     elif num == 3:
-        fig_, axes = plt.subplots(2, 2)
+        fig, axes = plt.subplots(2, 2)
         for r in range(2):
             for c in range(2):
                 if count <= 2:
@@ -185,7 +182,7 @@ def plot_patterns(list_pattern):
                     count += 1
         plt.setp(axes, xticks=[], xticklabels=[], yticks=[-1, 1], yticklabels=['-', '+'])
     elif num == 4:
-        fig_, axes = plt.subplots(2, 2)
+        fig, axes = plt.subplots(2, 2)
         for r in range(2):
             for c in range(2):
                 df = pandas.DataFrame(list_pattern[count][0])
