@@ -1,6 +1,6 @@
 # import sys
 # from algorithms.init_fuzz_x import *
-from main_entry import *
+from main_entry import init_request
 import json
 
 
