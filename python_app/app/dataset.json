@@ -1,6 +1,6 @@
 {
     "minSup": 0.5,
-    "patternType": "temporal gradual",
+    "patternType": "gradual",
     "datastreams": [
         {
             "id": 12,
