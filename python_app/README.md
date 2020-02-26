@@ -9,8 +9,6 @@ Below is a sample of how the JSON body of the request should look like:
 {
     "patternType": "gradual",
     "minSup": 0.5,
-    "steps": 20,
-    "combs": 100,
     "m_rep": 0.5,
     "c_ref": 0,
     "datastreams": [
