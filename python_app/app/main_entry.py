@@ -30,17 +30,25 @@ def init_request(req_data):
         x_data = cross_data(json_data)
         if pattern == "gradual":
             title, list_gp = init_acograd(x_data, min_sup)
+            list_pattern = list()
+            for gp in list_gp[:4]:
+                pattern = gp[1]
+                support = gp[0]
+                plot_data = generate_plot_data(title, pattern)
+                list_pattern.append(([plot_data, "support:"+str(support)]))
         else:
             ref_col = json_data["c_ref"]
             min_rep = json_data["m_rep"]
-            title, list_gp = init_acotgrad(x_data, min_sup, min_rep, ref_col)
-
-        list_pattern = list()
-        for gp in list_gp[:4]:
-            pattern = gp[1]
-            support = gp[0]
-            plot_data = generate_plot_data(title, pattern)
-            list_pattern.append(([plot_data, "support:"+str(support)]))
+            title, list_tgp = init_acotgrad(x_data, min_sup, min_rep, ref_col)
+            list_pattern = list()
+            for obj in list_tgp[:4]:
+                if obj:
+                    tgp = obj[0]
+                    pattern = tgp[1][0]
+                    support = tgp[0]
+                    time_lag = tgp[1][1]
+                    plot_data = generate_plot_data(title, pattern)
+                    list_pattern.append(([plot_data, "support:"+str(support)+"\ntime lag:"+str(time_lag)]))
         figure = plot_patterns(list_pattern)
         return figure
     except Exception as error:
