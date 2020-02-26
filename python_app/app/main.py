@@ -12,9 +12,9 @@ def application(env, start_response):
         request_body = env['wsgi.input'].read(request_body_size)
         # message = init_algorithm(request_body)
         message = init_request(request_body)
-    except ValueError as error:
+    except Exception as error:
         start_response("204 OK", [("Content-Type", "application/json")])
         request_body_size = 0
-        message = json.dumps({"Error":str(error)})
+        message = json.dumps({"Failed" : str(error)})
 
     return str(message).encode("utf-8")

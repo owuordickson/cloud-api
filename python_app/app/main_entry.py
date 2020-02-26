@@ -28,12 +28,12 @@ def init_request(req_data):
         min_sup = json_data["minSup"]
         #datastreams = json_data["datastreams"]
         x_data = cross_data(json_data)
-        if pattern == "ftgp":
+        if pattern == "gradual":
+            title, list_gp = init_acograd(x_data, min_sup)
+        else:
             ref_col = json_data["c_ref"]
             min_rep = json_data["m_rep"]
             title, list_gp = init_acotgrad(x_data, min_sup, min_rep, ref_col)
-        else:
-            title, list_gp = init_acograd(x_data, min_sup)
 
         list_pattern = list()
         for gp in list_gp[:4]:
