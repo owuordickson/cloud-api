@@ -41,8 +41,12 @@ def init_request(req_data):
             min_rep = json_data["m_rep"]
             title, list_tgp = init_acotgrad(x_data, min_sup, min_rep, ref_col)
             list_pattern = list()
-            for obj in list_tgp[:4]:
+            count = 0
+            for obj in list_tgp:
+                if count > 4:
+                    break
                 if obj:
+                    count += 1
                     tgp = obj[0]
                     pattern = tgp[1][0]
                     support = tgp[0]
