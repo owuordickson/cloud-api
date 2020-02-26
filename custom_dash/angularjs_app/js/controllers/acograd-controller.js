@@ -132,7 +132,7 @@ gostApp
                 if($scope.newParams.patternType === "gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('gradualContent.html');
-                }else if($scope.newParams.patternType === "emerging"){
+                }else if($scope.newParams.patternType === "temporal gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('emergingContent.html');
                 }else{
