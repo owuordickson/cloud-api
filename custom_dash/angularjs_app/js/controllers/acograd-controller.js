@@ -52,11 +52,11 @@ gostApp
     $scope.info_title = "information";
     $scope.info_msg = "click 'execute' button to cross different datastreams";
     $scope.supports = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
-    $scope.patterns = ["gradual", "temporal gradual", "temporal emerging"];
+    $scope.patterns = ["gp", "ftgp"];
 
     $scope.newParams = {};
     $scope.newParams.minSup = 0.5;
-    $scope.newParams.patternType = "gradual";
+    $scope.newParams.patternType = "gp";
     $scope.newParams.datastreams = null;
 
     $scope.ds_model = [];

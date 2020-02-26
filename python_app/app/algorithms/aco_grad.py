@@ -8,20 +8,17 @@
 @created: "12 July 2019"
 
 """
+
 import numpy as np
 import random as rand
 import matplotlib.pyplot as plt
-import pandas
-from itertools import cycle, islice
-from io import BytesIO
-import base64
+# from src import FuzzyMF
+from fuzzy_mf import FuzzyMF
 
 
 class GradACO:
 
-    def __init__(self, steps, max_combs, d_set):
-        self.steps = steps
-        self.max_combs = max_combs
+    def __init__(self, d_set):
         self.data = d_set
         self.attr_index = self.data.attr_index
         self.e_factor = 0  # evaporation factor
@@ -29,18 +26,26 @@ class GradACO:
         self.valid_bins = []
         self.invalid_bins = []
 
-    def run_ant_colony(self, min_supp):
+    def run_ant_colony(self, min_supp, time_diffs=None):
         all_sols = list()
         win_sols = list()
+        win_lag_sols = list()
         loss_sols = list()
         invalid_sols = list()
-        for t in range(self.steps):
-            for n in range(self.max_combs):
-                sol_n = self.generate_rand_pattern()
-                # print(sol_n)
-                if sol_n and (sol_n not in all_sols):
+        # count = 0
+        # converging = False
+        # while not converging:
+        repeated = 0
+        while repeated < 5:
+            # count += 1
+            sol_n = self.generate_rand_pattern()
+            # print(sol_n)
+            if sol_n:
+                if sol_n not in all_sols:
+                    lag_sols = []
+                    repeated = 0
                     all_sols.append(sol_n)
-                    if loss_sols:
+                    if loss_sols or invalid_sols:
                         # check for super-set anti-monotony
                         is_super = GradACO.check_anti_monotony(loss_sols, sol_n, False)
                         is_invalid = GradACO.check_anti_monotony(invalid_sols, sol_n, False)
@@ -51,31 +56,52 @@ class GradACO:
                         is_sub = GradACO.check_anti_monotony(win_sols, sol_n, True)
                         if is_sub:
                             continue
-                    supp, sol_gen = self.evaluate_bin_solution(sol_n, min_supp)
+                    if time_diffs is None:
+                        supp, sol_gen = self.evaluate_bin_solution(sol_n, min_supp, time_diffs)
+                    else:
+                        supp, lag_sols = self.evaluate_bin_solution(sol_n, min_supp, time_diffs)
+                        if supp:
+                            sol_gen = lag_sols[0]
+                        else:
+                            sol_gen = False
                     # print(supp)
-                    # print(sol_gen)
-                    if supp and (supp >= min_supp) and ([supp, sol_gen] not in win_sols):
-                        win_sols.append([supp, sol_gen])
-                        self.update_pheromone(sol_gen)
-                    elif supp and (supp < min_supp) and ([supp, sol_gen] not in loss_sols):
-                        loss_sols.append([supp, sol_gen])
+                    if supp and (supp >= min_supp):  # and ([supp, sol_gen] not in win_sols):
+                        if [supp, sol_gen] not in win_sols:
+                            win_sols.append([supp, sol_gen])
+                            self.update_pheromone(sol_gen)
+                            if time_diffs is not None:
+                                win_lag_sols.append([supp, lag_sols])
+                            # converging = self.check_convergence()
+                    elif supp and (supp < min_supp):  # and ([supp, sol_gen] not in loss_sols):
+                        if [supp, sol_gen] not in loss_sols:
+                            loss_sols.append([supp, sol_gen])
                         # self.update_pheromone(sol_n, False)
                     else:
                         invalid_sols.append([supp, sol_n])
+                        if sol_gen:
+                            invalid_sols.append([supp, sol_gen])
                         # self.update_pheromone(sol_n, False)
+                else:
+                    repeated += 1
+            # converging = self.check_convergence(repeated)
+            # is_member = GradACO.check_convergence(win_sols, sol_n)
         # print("All: "+str(len(all_sols)))
         # print("Winner: "+str(len(win_sols)))
         # print("Losers: "+str(len(loss_sols)))
-        # return GradACO.stringfy_pattern(win_sols)
-        return win_sols
+        # print(count)
+        if time_diffs is None:
+            return win_sols
+        else:
+            return win_lag_sols
 
     def generate_rand_pattern(self):
         p = self.p_matrix
-        n = len(self.attr_index)  # self.data.column_size
+        n = len(self.attr_index)
         pattern = list()
         count = 0
         for i in range(n):
-            x = float(rand.randint(1, self.max_combs) / self.max_combs)
+            max_extreme = len(self.attr_index)
+            x = float(rand.randint(1, max_extreme) / max_extreme)
             pos = float(p[i][0] / (p[i][0] + p[i][1] + p[i][2]))
             neg = float((p[i][0] + p[i][1]) / (p[i][0] + p[i][1] + p[i][2]))
             if x < pos:
@@ -91,7 +117,7 @@ class GradACO:
             pattern = False
         return pattern
 
-    def evaluate_bin_solution(self, pattern, min_supp):
+    def evaluate_bin_solution(self, pattern, min_supp, time_diffs):
         # pattern = [('2', '+'), ('4', '+')]
         lst_bin = self.data.lst_bin
         gen_pattern = []
@@ -127,11 +153,12 @@ class GradACO:
                         self.invalid_bins.append(tuple([obj_i[0], '-']))
                 else:
                     # binary does not exist
-                    return False
+                    return False, False
         if count <= 1:
             return False, False
         else:
-            supp, new_pattern = GradACO.perform_bin_and(bin_data, self.data.get_size(), min_supp)
+            size = len(self.data.attr_data[0][1])
+            supp, new_pattern = GradACO.perform_bin_and(bin_data, size, min_supp, gen_pattern, time_diffs)
             return supp, new_pattern
 
     def update_pheromone(self, pattern):
@@ -153,7 +180,7 @@ class GradACO:
 
     def plot_pheromone_matrix(self):
         x_plot = np.array(self.p_matrix)
-        # print(x_plot)
+        print(x_plot)
         # Figure size (width, height) in inches
         # plt.figure(figsize=(4, 4))
         plt.title("+: increasing; -: decreasing; x: irrelevant")
@@ -175,88 +202,6 @@ class GradACO:
         plt.gray()
         plt.grid()
         plt.show()
-        # fig = BytesIO()
-        # plt.savefig(fig, format='png')
-        # fig.seek(0)  # rewind to beginning of file
-        # figdata_png = base64.b64encode(fig.getvalue())
-        # return fig
-
-    @staticmethod
-    def plot_patterns(list_pattern):
-        num = len(list_pattern)
-        count = 0
-        if num == 1:
-            df = pandas.DataFrame(list_pattern[count][0])
-            my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(df)))
-            ax = df.plot(kind='bar', stacked=True, width=1, color=my_colors)
-            ax.spines['right'].set_visible(False)
-            ax.spines['top'].set_visible(False)
-            ax.spines['bottom'].set_position('center')
-            plt.ylim(-2, 2)
-            plt.xlim(-0.5, len(list_pattern[count][0]))
-            plt.yticks([-1, 1], ['-', '+'])
-            plt.xticks([], [])
-            plt.text(0, 1.8, list_pattern[count][1])
-        elif num == 2:
-            fig, axes = plt.subplots(2)
-            for r in range(2):
-                df = pandas.DataFrame(list_pattern[count][0])
-                my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(df)))
-                df.plot(ax=axes[r], kind='bar', stacked=True, width=1, color=my_colors)
-                axes[r].spines['right'].set_visible(False)
-                axes[r].spines['top'].set_visible(False)
-                axes[r].spines['bottom'].set_position('center')
-                # axes[r, c].set_title("support: "+str(count))
-                axes[r].text(0, 1.8, list_pattern[count][1])
-                axes[r].set_xlim([-0.5, len(list_pattern[count][0])])
-                axes[r].set_ylim([-2, 2])
-                count += 1
-            plt.setp(axes, xticks=[], xticklabels=[],
-                     yticks=[-1, 1], yticklabels=['-', '+'])
-        elif num == 3:
-            fig, axes = plt.subplots(2, 2)
-            for r in range(2):
-                for c in range(2):
-                    if count <= 2:
-                        df = pandas.DataFrame(list_pattern[count][0])
-                        my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(df)))
-                        df.plot(ax=axes[r, c], kind='bar', stacked=True, width=1, color=my_colors)
-                        axes[r, c].spines['right'].set_visible(False)
-                        axes[r, c].spines['top'].set_visible(False)
-                        axes[r, c].spines['bottom'].set_position('center')
-                        # axes[r, c].set_title("support: "+str(count))
-                        axes[r, c].text(0, 1.8, list_pattern[count][1])
-                        axes[r, c].set_xlim([-0.5, len(list_pattern[count][0])])
-                        axes[r, c].set_ylim([-2, 2])
-                        count += 1
-            plt.setp(axes, xticks=[], xticklabels=[],
-                     yticks=[-1, 1], yticklabels=['-', '+'])
-        elif num == 4:
-            fig, axes = plt.subplots(2, 2)
-            for r in range(2):
-                for c in range(2):
-                    df = pandas.DataFrame(list_pattern[count][0])
-                    my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(df)))
-                    df.plot(ax=axes[r, c], kind='bar', stacked=True, width=1, color=my_colors)
-                    axes[r, c].spines['right'].set_visible(False)
-                    axes[r, c].spines['top'].set_visible(False)
-                    axes[r, c].spines['bottom'].set_position('center')
-                    # axes[r, c].set_title("support: "+str(count))
-                    axes[r, c].text(0, 1.8, list_pattern[count][1])
-                    axes[r, c].set_xlim([-0.5, len(list_pattern[count][0])])
-                    axes[r, c].set_ylim([-2, 2])
-                    count += 1
-            plt.setp(axes, xticks=[], xticklabels=[],
-                     yticks=[-1, 1], yticklabels=['-', '+'])
-        else:
-            plt.title("No Patterns Found")
-        fig_bytes = BytesIO()
-        plt.savefig(fig_bytes, format='png')
-        fig_bytes.seek(0)  # rewind to beginning of file
-        buffer = b''.join(fig_bytes)
-        fig_base64 = base64.b64encode(buffer)
-        img_data = fig_base64.decode('utf-8')
-        return img_data
 
     @staticmethod
     def check_anti_monotony(lst_p, p_arr, ck_sub):
@@ -274,7 +219,7 @@ class GradACO:
         return result
 
     @staticmethod
-    def perform_bin_and(unsorted_bins, n, thd_supp):
+    def perform_bin_and(unsorted_bins, n, thd_supp, gen_p, t_diffs):
         lst_bin = sorted(unsorted_bins, key=lambda x: x[1])
         final_bin = np.array([])
         pattern = []
@@ -294,6 +239,14 @@ class GradACO:
                 count += 1
         supp = float(np.sum(final_bin)) / float(n * (n - 1.0) / 2.0)
         if count >= 2:
-            return supp, pattern
+            if t_diffs is None:
+                return supp, pattern
+            else:
+                t_lag = FuzzyMF.calculate_time_lag(FuzzyMF.get_patten_indices(final_bin), t_diffs, thd_supp)
+                if t_lag:
+                    temp_p = [pattern, t_lag]
+                    return supp, temp_p
+                else:
+                    return -1, pattern
         else:
-            return 0, unsorted_bins
+            return -1, gen_p
