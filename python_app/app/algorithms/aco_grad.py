@@ -89,6 +89,7 @@ class GradACO:
         # print("Winner: "+str(len(win_sols)))
         # print("Losers: "+str(len(loss_sols)))
         # print(count)
+        print("Finished extracting patterns")
         if time_diffs is None:
             return win_sols
         else:

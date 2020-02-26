@@ -68,6 +68,7 @@ class TgradACO:
                 t_pattern = self.fetch_patterns(step)
                 if t_pattern:
                     patterns.append(t_pattern)
+            print("Finished extracting patterns")
             return patterns
 
     def fetch_patterns(self, step):
