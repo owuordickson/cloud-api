@@ -18,6 +18,7 @@ import base64
 from algorithms.tx_json import FuzzTXj
 from algorithms.handle_json import InitData
 from algorithms.aco_grad import GradACO
+from algorithms.aco_t_graank import TgradACO
 
 
 def init_request(req_data):
@@ -30,7 +31,7 @@ def init_request(req_data):
         if pattern == "ftgp":
             ref_col = json_data["c_ref"]
             min_rep = json_data["m_rep"]
-            title, list_gp = init_acotgraank(x_data, min_sup, min_rep, ref_col)
+            title, list_gp = init_acotgrad(x_data, min_sup, min_rep, ref_col)
         else:
             title, list_gp = init_acograd(x_data, min_sup)
 
@@ -74,10 +75,23 @@ def init_acograd(data, min_sup):
         list_gp.sort(key=lambda k: (k[0], k[1]), reverse=True)
         return d_set.title, list_gp
     else:
-        raise Exception("Mining Error: Unable to fetch patterns")
+        raise Exception("Mining Error: Unable to fetch gradual patterns")
 
 
-def init_acotgraank(data, min_sup, min_rep, ref_col):
+def init_acotgrad(data, minSup, minRep, refItem):
+    d_set = InitData(data)
+    if d_set.data:
+        d_set.init_attributes(False)
+        tgp = TgradACO(d_set, refItem, minSup, minRep, 1)
+        list_tgp = tgp.run_tgraank(parallel=True)
+        list_tgp = list(filter(bool, list_tgp))
+        if len(list_tgp) > 5:
+            list_tgp.sort(key=lambda k: (k[0][0], k[0][1]), reverse=True)
+        return d_set.title, list_tgp
+    else:
+        raise Exception("Mining Error: Unable to fetch temporal gradual patterns")
+
+
     return "title", list()
 
 
@@ -122,7 +136,7 @@ def plot_patterns(list_pattern):
         plt.xticks([], [])
         plt.text(0, 1.8, list_pattern[count][1])
     elif num == 2:
-        fig, axes = plt.subplots(2)
+        fig_, axes = plt.subplots(2)
         for r in range(2):
             df = pandas.DataFrame(list_pattern[count][0])
             my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(df)))
@@ -137,7 +151,7 @@ def plot_patterns(list_pattern):
             count += 1
         plt.setp(axes, xticks=[], xticklabels=[], yticks=[-1, 1], yticklabels=['-', '+'])
     elif num == 3:
-        fig, axes = plt.subplots(2, 2)
+        fig_, axes = plt.subplots(2, 2)
         for r in range(2):
             for c in range(2):
                 if count <= 2:
@@ -154,7 +168,7 @@ def plot_patterns(list_pattern):
                     count += 1
         plt.setp(axes, xticks=[], xticklabels=[], yticks=[-1, 1], yticklabels=['-', '+'])
     elif num == 4:
-        fig, axes = plt.subplots(2, 2)
+        fig_, axes = plt.subplots(2, 2)
         for r in range(2):
             for c in range(2):
                 df = pandas.DataFrame(list_pattern[count][0])
