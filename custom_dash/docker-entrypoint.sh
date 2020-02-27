@@ -108,7 +108,7 @@ echo "
 
 	location /py1.0 {
 		include uwsgi_params;
-		uwsgi_pass py-server:8088;
+		uwsgi_pass graank:8088;
 	}
 
     location = /favicon.ico { access_log off; log_not_found off; }

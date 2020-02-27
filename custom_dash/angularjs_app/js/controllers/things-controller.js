@@ -1,5 +1,5 @@
 // Things controller
-gostApp.controller('ThingsCtrl', function ($scope, $http) {
+gostApp.controller('ThingsCtrl', function ($scope, $http, $uibModal) {
     $scope.Page.setTitle('THINGS');
     $scope.Page.setHeaderIcon(iconThing);
 
@@ -27,7 +27,7 @@ gostApp.controller('ThingsCtrl', function ($scope, $http) {
         });
     };
 
-     $scope.deleteThingClicked = function (entity) {
+    $scope.deleteThingClicked = function (entity) {
         var res = $http.delete(getUrl() + '/v1.0/Things(' + entity["@iot.id"] + ')');
         res.success(function(data, status, headers, config) {
             var index = $scope.thingsList.indexOf(entity);
@@ -37,4 +37,33 @@ gostApp.controller('ThingsCtrl', function ($scope, $http) {
             alert( "failure: " + JSON.stringify({data: data}));
         });
      };
-});
+
+    $scope.initAddThing = function(){
+        var modalInstance = $uibModal.open({
+            animation: true,
+            ariaLabelledBy: 'modal-title',
+            ariaDescribedBy: 'modal-body',
+            templateUrl: 'addNewThingContent.html',
+            controller: 'NewThingInstanceCtrl'
+          });
+
+        modalInstance.result.then(function(thing){   
+            addNewThing(thing);
+        });
+    }
+
+})
+
+gostApp.controller('NewThingInstanceCtrl', function($uibModalInstance, $scope) {
+    
+    $scope.newThing = {};
+
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+    $scope.addThing = function(){
+        $uibModalInstance.close($scope.newThing);
+    };
+
+  });

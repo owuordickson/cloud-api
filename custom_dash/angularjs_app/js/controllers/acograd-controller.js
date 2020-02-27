@@ -52,7 +52,7 @@ gostApp
     $scope.info_title = "information";
     $scope.info_msg = "click 'execute' button to cross different datastreams";
     $scope.supports = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
-    $scope.patterns = ["gradual", "temporal gradual", "temporal emerging"];
+    $scope.patterns = ["gradual", "temporal gradual"];
 
     $scope.newParams = {};
     $scope.newParams.minSup = 0.5;
@@ -132,7 +132,7 @@ gostApp
                 if($scope.newParams.patternType === "gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('gradualContent.html');
-                }else if($scope.newParams.patternType === "emerging"){
+                }else if($scope.newParams.patternType === "temporal gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('emergingContent.html');
                 }else{
@@ -252,4 +252,31 @@ gostApp
         $scope.downloads = true;
     }
 
-});
+})
+
+gostApp.controller('ModalInstanceCtrl', function($uibModalInstance, $scope, $http, params) {
+  
+    $scope.reps = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+
+    $scope.data = params;
+    //$scope.data.steps = 20;
+    //$scope.data.combs = 100;
+    $scope.data.m_rep = 0.5;
+    $scope.data.c_ref = 0;
+
+    $scope.repClicked = function(sel_rep){
+        $scope.data.m_rep = sel_rep;
+    }
+
+    $scope.refClicked = function(sel_ref){
+        $scope.data.c_ref = sel_ref;
+    }
+  
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+    $scope.runAcoGraank = function(){
+        $uibModalInstance.close($scope.data);
+    };
+  });
