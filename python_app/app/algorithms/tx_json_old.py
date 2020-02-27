@@ -6,28 +6,22 @@
 @version: "1.0"
 @email: "owuordickson@gmail.com"
 @created: "10 October 2019"
+@modified: "27 February 2020"
 
 """
 import json
+from datetime import datetime
 from dateutil.parser import parse
 import time
 import numpy as np
 import skfuzzy as fuzzy
 
 
-class FuzzX:
+class FuzzTXj:
 
-    def __init__(self, input_data):
-        json_data = FuzzX.read_json(input_data)
+    def __init__(self, json_data):
         if "datastreams" in json_data:
-            # true
-            self.pattern = json_data["patternType"]
-            self.min_sup = json_data["minSup"]
-            self.steps = json_data["steps"]
-            self.combs = json_data["combs"]
-            self.ref = json_data["c_ref"]
-            self.rep = json_data["m_rep"]
-            self.observation_list, self.time_list = FuzzX.get_observations(json_data)
+            self.observation_list, self.time_list = FuzzTXj.get_observations(json_data)
         else:
             raise Exception("Python Error: dataset has no observations")
 
@@ -36,7 +30,7 @@ class FuzzX:
         time_data = self.time_list
         x_data = list()
         list_index = list()
-        boundaries, extremes = self.build_mf()
+        boundaries, extremes = self.get_boundaries()
 
         temp_tuple = list()
         temp_tuple.append("timestamp")
@@ -47,10 +41,10 @@ class FuzzX:
 
         while boundaries[1] <= extremes[1]:
             # while boundary is less than max_time
-            arr_index = FuzzX.approx_fuzzy_index(time_data, boundaries)
+            arr_index = FuzzTXj.approx_fuzzy_index(time_data, boundaries)
             if arr_index:
                 # print(arr_index)
-                temp_tuple = FuzzX.fetch_x_tuples(boundaries[1], raw_data, arr_index, list_index)
+                temp_tuple = FuzzTXj.fetch_x_tuples(boundaries[1], raw_data, arr_index, list_index)
                 if temp_tuple:
                     x_data.append(temp_tuple)
                     list_index.append(arr_index)
@@ -62,14 +56,14 @@ class FuzzX:
         # print(list_index)
         return x_data
 
-    def build_mf(self):
+    def get_boundaries(self):
         min_time = 0
         max_time = 0
         max_diff = 0
         max_boundary = []
         # list_boundary = list()
         for item in self.time_list:
-            temp_min, temp_max, min_diff = FuzzX.get_min_diff(item)
+            temp_min, temp_max, min_diff = FuzzTXj.get_min_diff(item)
             # boundary = [(temp_min - min_diff), temp_min, (temp_min + min_diff)]
             # list_boundary.append(boundary)
             if (max_diff == 0) or (min_diff > max_diff):
@@ -99,17 +93,18 @@ class FuzzX:
     @staticmethod
     def fetch_x_tuples(time, data, arr_index, list_index):
         temp_tuple = list()
-        temp_tuple.append(time)
+        # temp_tuple.append(time)
+        temp_tuple.append(str(datetime.fromtimestamp(time)))
         for i in range(len(data)):
             index = (arr_index[i] + 1)
             # check if index already appears
-            exists = FuzzX.check_index(i, arr_index[i], list_index)
+            exists = FuzzTXj.check_index(i, arr_index[i], list_index)
             if exists:
                 return False
             # print(exists)
             # pull their respective columns from raw_data to form a new x_data
-            var_tuple = data[i][index][1]
-            temp_tuple.append(var_tuple)
+            var_col = data[i][index][1]
+            temp_tuple.append(var_col)
         return temp_tuple
 
     @staticmethod
@@ -126,12 +121,6 @@ class FuzzX:
         return arr_pop.min(), arr_pop.max(), arr_diff.min()
 
     @staticmethod
-    def read_json(data):
-        # with open(file, 'r') as f:
-        temp_data = json.loads(data)
-        return temp_data
-
-    @staticmethod
     def get_observations(json_data):
         list_observation = list()
         list_timestamps = list()
@@ -141,7 +130,7 @@ class FuzzX:
             title = ["timestamp", item["name"]]
             temp_observations.append(title)
             for obj in item["observations"]:
-                ok, var_time = FuzzX.test_time(obj["time"])
+                ok, var_time = FuzzTXj.test_time(obj["time"])
                 if not ok:
                     return False, False
                 # var_temp = [obj["time"], obj["value"]]
