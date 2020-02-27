@@ -15,7 +15,7 @@ import pandas
 from itertools import cycle, islice
 from io import BytesIO
 import base64
-from algorithms.tx_json_old import FuzzTXj
+from algorithms.tx_json import FuzzTXj
 from algorithms.handle_json import InitData
 from algorithms.aco_grad import GradACO
 from algorithms.aco_t_graank import TgradACO

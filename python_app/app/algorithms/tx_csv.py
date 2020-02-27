@@ -6,6 +6,7 @@
 @version: "1.0"
 @email: "owuordickson@gmail.com"
 @created: "10 October 2019"
+@modified: "26 February 2020"
 
 """
 import csv
@@ -85,6 +86,8 @@ class FuzzTX:
 
         self.col_size = len(title_tuple)
         arr_slice = list(np.arange(boundaries[1], extremes[1], extremes[2]))
+        if np.array(arr_slice).max() < extremes[1]:
+            arr_slice.append(extremes[1])
 
         if self.allow_parallel:
             # fetch value tuples through parallel processors
@@ -178,15 +181,11 @@ class FuzzTX:
 
     @staticmethod
     def get_min_diff(arr):
-        stamps = list(set(arr))
-        stamps.sort()
-        last = len(stamps) - 1
-        min_stamp = stamps[0]
-        max_stamp = stamps[last]
-        try:
-            min_diff = (stamps[1] - stamps[0])
-        except IndexError:
-            min_diff = 0
+        arr_pop = np.array(arr)
+        arr_diff = np.abs(np.diff(arr_pop))
+        min_stamp = arr_pop.min()
+        max_stamp = arr_pop.max()
+        min_diff = arr_diff.min()
         return min_stamp, max_stamp, min_diff
 
     @staticmethod

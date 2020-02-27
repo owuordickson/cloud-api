@@ -21,7 +21,7 @@ class FuzzTXj(FuzzTX):
         if "datastreams" in json_data:
             self.allow_char = False
             self.cores = InitParallel.get_num_cores()
-            self.allow_parallel = True
+            self.allow_parallel = False
             try:
                 self.d_streams = self.get_data_streams()
                 self.size = self.get_size()
