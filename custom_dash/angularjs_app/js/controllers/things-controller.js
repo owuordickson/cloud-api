@@ -39,6 +39,7 @@ gostApp.controller('ThingsCtrl', function ($scope, $http, $uibModal) {
      };
 
     $scope.initAddThing = function(){
+        console.log("starting dialog for new thing")
         var modalInstance = $uibModal.open({
             animation: true,
             ariaLabelledBy: 'modal-title',
@@ -52,7 +53,7 @@ gostApp.controller('ThingsCtrl', function ($scope, $http, $uibModal) {
         });
     }
 
-})
+});
 
 gostApp.controller('NewThingInstanceCtrl', function($uibModalInstance, $scope) {
     

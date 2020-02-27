@@ -252,7 +252,7 @@ gostApp
         $scope.downloads = true;
     }
 
-})
+});
 
 gostApp.controller('ModalInstanceCtrl', function($uibModalInstance, $scope, $http, params) {
   
