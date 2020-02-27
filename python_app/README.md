@@ -1,10 +1,12 @@
 # Gradual Pattern Mining Tools (GRAANK)
+
 This application is served by uWSGI:NGINX server and it receives HTTP POST requests from the Data Analysis Service and it returns responses with the patterns extracted. Each request contains a JSON body with selected algorithm and the data streams from which gradual patterns are to be extracted.
 
-### Usage
+## Usage
+
 Below is a sample of how the JSON body of the request should look like:
 
-```
+``` shell
 
 {
     "patternType": "gradual",

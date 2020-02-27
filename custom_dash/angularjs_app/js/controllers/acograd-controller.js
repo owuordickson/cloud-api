@@ -52,7 +52,7 @@ gostApp
     $scope.info_title = "information";
     $scope.info_msg = "click 'execute' button to cross different datastreams";
     $scope.supports = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
-    $scope.patterns = ["gradual", "temporal gradual"];
+    $scope.patterns = ["gradual", "temporal gradual", "temporal emerging"];
 
     $scope.newParams = {};
     $scope.newParams.minSup = 0.5;
@@ -102,7 +102,7 @@ gostApp
           }
         });
 
-        modalInstance.result.then(function(dataset){
+        modalInstance.result.then(function(dataset){            
             //var blob = new Blob([JSON.stringify(dataset)], {type : 'application/json'});
             //saveAs(blob, "dataset.json");
 
@@ -132,7 +132,7 @@ gostApp
                 if($scope.newParams.patternType === "gradual"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('gradualContent.html');
-                }else if($scope.newParams.patternType === "temporal gradual"){
+                }else if($scope.newParams.patternType === "emerging"){
                     //alert("pattern type: "+$scope.newParams.patternType);
                     $scope.open('emergingContent.html');
                 }else{
@@ -140,7 +140,7 @@ gostApp
                     alert(msg);
                     $scope.info_msg = msg;
                 }
-            });
+            });              
         }
     }
 
@@ -162,7 +162,7 @@ gostApp
         var deferred = $q.defer();
 
         angular.forEach(data_model, function(value, key){
-            //1. Load selected datastreams' observations - will change after resetting POST size
+            //1. Load selected datastreams' observations
             var res = $http.get(getUrl() + "/v1.0/Datastreams("+ value.id +")/Observations?$top=1000&$orderby=phenomenonTime desc&$select=id,phenomenonTime,result");
             res.success(function(data, status, headers, config) {
                 var dsName = $scope.getDatastreamName(value.id);
@@ -218,30 +218,30 @@ gostApp
     var b64toBlob = function(b64Data, contentType, sliceSize) {
         contentType = contentType || '';
         sliceSize = sliceSize || 512;
-
+      
         var byteCharacters = atob(b64Data);
         var byteArrays = [];
-
+      
         for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
           var slice = byteCharacters.slice(offset, offset + sliceSize);
-
+      
           var byteNumbers = new Array(slice.length);
           for (var i = 0; i < slice.length; i++) {
             byteNumbers[i] = slice.charCodeAt(i);
           }
-
+      
           var byteArray = new Uint8Array(byteNumbers);
-
+      
           byteArrays.push(byteArray);
         }
-
+          
         var blob = new Blob(byteArrays, {type: contentType});
         return blob;
     }
 
     var showProgress = function(val){
         $scope.loading = val;
-
+        
         $scope.results = false;
         $scope.downloads = false;
     }
