@@ -32,7 +32,7 @@ class TgradACO:
             self.time_ok = True
             self.time_cols = cols
             self.min_sup = min_sup
-            if ref_item > 1:
+            if ref_item > 1 and ref_item < d_set.get_attribute_no():
                 self.ref_item = ref_item
             else:
                 self.ref_item = 1

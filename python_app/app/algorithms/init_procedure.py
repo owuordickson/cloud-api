@@ -201,6 +201,7 @@ def plot_patterns(list_pattern):
                 count += 1
         plt.setp(axes, xticks=[], xticklabels=[], yticks=[-1, 1], yticklabels=['-', '+'])
     else:
+        plt.clf()
         plt.title("No Patterns Found")
     fig_bytes = BytesIO()
     plt.savefig(fig_bytes, format='png')
