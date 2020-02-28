@@ -13,7 +13,7 @@
     },
     "Datastreams": [
         {
-            "name": "Temperature sensor",
+            "name": "Temperature",
             "description": "This is a datastream for an oven’s internal temperature.",
             "unitOfMeasurement": {
                 "name": "degree Celsius",
@@ -60,10 +60,47 @@
                 "description": "DS18B20 is an air temperature sensor…",
                 "encodingType": "application/pdf",
                 "metadata": "http://datasheets.maxim-ic.com/en/ds/DS18B20.pdf"
-            }
+            },
+            "Observations": [
+                {
+                    "phenomenonTime": "2013-04-18T16:15:00-07:00",
+                    "result": 124,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:05-07:00",
+                    "result": 120,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:10-07:00",
+                    "result": 115,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:15-07:00",
+                    "result": 110,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:20-07:00",
+                    "result": 105,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                }
+            ]
         },
         {
-            "name": "Smoke detector",
+            "name": "Smoke",
             "description": "This is a datastream for detecting smoke around the oven.",
             "unitOfMeasurement": {
                 "name": "Color scale",
@@ -109,10 +146,47 @@
                 "description": "RE46C180 is a CMOS ionization-type smoke detector",
                 "encodingType": "application/pdf",
                 "metadata": "https://www.mouser.com/datasheet/2/268/22275A-54807.pdf"
-            }        
+            },
+            "Observations": [
+                {
+                    "phenomenonTime": "2013-04-18T16:15:01-07:00",
+                    "result": 0,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:05-07:00",
+                    "result": 1,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:10-07:00",
+                    "result": 2,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:16-07:00",
+                    "result": 3,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:22-07:00",
+                    "result": 4,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                }
+            ]       
         },
         {
-            "name": "Motion sensor",
+            "name": "Motion",
             "description": "This is a datastream for detecting movements around the room",
             "unitOfMeasurement": {
                 "name": "metres",
@@ -158,7 +232,44 @@
                 "description": "SEN-13285 is PIR (motion) sensor used to detect motion from pets/humanoids from about 20 feet away (possibly works on zombies, not guaranteed).",
                 "encodingType": "application/pdf",
                 "metadata": "https://www.sparkfun.com/datasheets/Sensors/Proximity/SE-10.pdf"
-            }        
+            },
+            "Observations":[
+                {
+                    "phenomenonTime": "2013-04-18T16:15:03-07:00",
+                    "result": 22,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:05-07:00",
+                    "result": 26,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:12-07:00",
+                    "result": 28,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:18-07:00",
+                    "result": 10,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                },
+                {
+                    "phenomenonTime": "2013-04-18T16:15:20-07:00",
+                    "result": 29,
+                    "FeatureOfInterest": {
+                        "@iot.id": 1
+                    }
+                }
+            ]      
         }
     ]
 }
