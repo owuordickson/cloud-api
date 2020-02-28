@@ -18,11 +18,11 @@ fi
 echo "
 client_body_buffer_size 		10K;
 client_header_buffer_size 		1k;
-client_max_body_size 			8m;
+client_max_body_size 			256M;
 large_client_header_buffers 	2 1k;
-client_body_timeout 			12;
-client_header_timeout 			12;
-send_timeout 	 				10;
+client_body_timeout 			60;
+client_header_timeout 			60;
+send_timeout 	 				60;
 gzip             				on;
 gzip_comp_level  				2;
 gzip_min_length  				1000;
