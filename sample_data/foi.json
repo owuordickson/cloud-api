@@ -1,0 +1,46 @@
+{
+    "name": "CCIT #361",
+    "description": "This is CCIT #361, Main Kitchen",
+    "encodingType": "application/vnd.geo+json",
+    "feature": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    100,
+                    50
+                ],
+                [
+                    10,
+                    9
+                ],
+                [
+                    23,
+                    4
+                ],
+                [
+                    100,
+                    50
+                ]
+            ],
+            [
+                [
+                    30,
+                    20
+                ],
+                [
+                    10,
+                    4
+                ],
+                [
+                    4,
+                    22
+                ],
+                [
+                    30,
+                    20
+                ]
+            ]
+        ]
+    }
+}

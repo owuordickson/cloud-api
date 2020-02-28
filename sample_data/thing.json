@@ -1,0 +1,164 @@
+{
+    "description": "This an oven with a temperature datastream.",
+    "name": "oven",
+    "location":{
+    	"type": "Feature",
+    	"geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        10,
+                        10
+                    ]
+                }
+    },
+    "Datastreams": [
+        {
+            "name": "Temperature sensor",
+            "description": "This is a datastream for an oven’s internal temperature.",
+            "unitOfMeasurement": {
+                "name": "degree Celsius",
+                "symbol": "°C",
+                "definition": "http://unitsofmeasure.org/ucum.html#para-30"
+            },
+            "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+            "observedArea": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            100,
+                            0
+                        ],
+                        [
+                            101,
+                            0
+                        ],
+                        [
+                            101,
+                            1
+                        ],
+                        [
+                            100,
+                            1
+                        ],
+                        [
+                            100,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "phenomenonTime": "2009-01-11T16:22:25.00Z/2011-08-21T08:32:10.00Z",
+            
+            "ObservedProperty": {
+                "name": "DewPoint Temperature",
+                "definition": "http://sweet.jpl.nasa.gov/ontology/property.owl#DewPointTemperature",
+                "description": "The dewpoint temperature is the temperature to which the air must be cooled, at constant pressure, for dew to form. As the grass and other objects near the ground cool to the dewpoint, some of the water vapor in the atmosphere condenses into liquid water on the objects."
+            },
+            "Sensor": {
+                "name": "DS18B20",
+                "description": "DS18B20 is an air temperature sensor…",
+                "encodingType": "application/pdf",
+                "metadata": "http://datasheets.maxim-ic.com/en/ds/DS18B20.pdf"
+            }
+        },
+        {
+            "name": "Smoke detector",
+            "description": "This is a datastream for detecting smoke around the oven.",
+            "unitOfMeasurement": {
+                "name": "Color scale",
+                "symbol": "0-5",
+                "definition": "http://en.wikipedia.org"
+            },
+            "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+            "observedArea": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            100,
+                            0
+                        ],
+                        [
+                            101,
+                            0
+                        ],
+                        [
+                            101,
+                            1
+                        ],
+                        [
+                            100,
+                            1
+                        ],
+                        [
+                            100,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "phenomenonTime": "2009-01-11T16:22:25.00Z/2011-08-21T08:32:10.00Z",
+            "ObservedProperty": {
+                "name": "Smoke Color",
+                "definition": "http://en.wikipedia.org",
+                "description": "A measure of smoke color using the Ringelmann scale, allocates a grayness number from 0 (white) to 5(black)"
+            },
+            "Sensor": {
+                "name": "RE46C180",
+                "description": "RE46C180 is a CMOS ionization-type smoke detector",
+                "encodingType": "application/pdf",
+                "metadata": "https://www.mouser.com/datasheet/2/268/22275A-54807.pdf"
+            }        
+        },
+        {
+            "name": "Motion sensor",
+            "description": "This is a datastream for detecting movements around the room",
+            "unitOfMeasurement": {
+                "name": "metres",
+                "symbol": "m",
+                "definition": "http://www.glolab.com/pirparts/infrared.html"
+            },
+            "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+            "observedArea": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            100,
+                            0
+                        ],
+                        [
+                            101,
+                            0
+                        ],
+                        [
+                            101,
+                            1
+                        ],
+                        [
+                            100,
+                            1
+                        ],
+                        [
+                            100,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "phenomenonTime": "2009-01-11T16:22:25.00Z/2011-08-21T08:32:10.00Z",
+            "ObservedProperty": {
+                "name": "Object closeness",
+                "definition": "https://en.wikipedia.org/wiki/Passive_infrared_sensor",
+                "description": "A measure of movement using differential detection"
+            },
+            "Sensor": {
+                "name": "SEN-13285",
+                "description": "SEN-13285 is PIR (motion) sensor used to detect motion from pets/humanoids from about 20 feet away (possibly works on zombies, not guaranteed).",
+                "encodingType": "application/pdf",
+                "metadata": "https://www.sparkfun.com/datasheets/Sensors/Proximity/SE-10.pdf"
+            }        
+        }
+    ]
+}
