@@ -1,6 +1,6 @@
 # How to populate (OGC SensorThings API) database with sample data
 
-**Caution:** you should only attempt this task after successfully installing the ```cloud-api``` through ```docker-compose up```.
+<span style="color:red">**Caution:** you should only attempt this task after successfully installing the ```cloud-api``` through ```docker-compose up```</span>
 
 Using an integration testing tool (we recommend **Postman** - follow [link](www.postman.com) to download). Initiate the POST requests that follow in the same order that they are listed:
 
