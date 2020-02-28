@@ -1,5 +1,7 @@
 # How to populate (OGC SensorThings API) database with sample data
 
+**Caution:** you should only attempt this task after successfully installing the ```cloud-api``` through ```docker-compose up```.
+
 Using an integration testing tool (we recommend **Postman** - follow [link](www.postman.com) to download). Initiate the POST requests that follow in the same order that they are listed:
 
 1. Navigate to url: <localhost:8080/v1.0/FeaturesOfInterest>, copy the contents of ```foi.json``` and paste them in the request's body, then send the request. This request will add 1 **FeatureOfInterest** (called *CCIT #361*).
