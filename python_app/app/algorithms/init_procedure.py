@@ -104,7 +104,7 @@ def init_acotgrad(data, minSup, minRep, refItem):
     if d_set.data:
         d_set.init_attributes(False)
         tgp = TgradACO(d_set, refItem, minSup, minRep, 1)
-        list_tgp = tgp.run_tgraank(parallel=True)
+        list_tgp = tgp.run_tgraank(parallel=False)
         list_tgp = list(filter(bool, list_tgp))
         list_tgp.sort(key=lambda k: (k[0][0], k[0][1]), reverse=True)
         return d_set.title, list_tgp
