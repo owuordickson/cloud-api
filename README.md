@@ -18,7 +18,7 @@ $docker-compose up
 
 ## Usage
 
-Then, launch your *Browser* and go to: <http://localhost:8080>
+Launch your *Browser* and go to: <http://localhost:8080>
 
 **NB:** a sample *IoT* data set provided in ```sample_data```, follow the steps to populate your database
 
