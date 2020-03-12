@@ -17,7 +17,9 @@ gostApp.controller('ThingsCtrl', function ($scope, $http, $uibModal) {
         $scope.Page.go("thing/" + thingID);
     };
 
-    $scope.addNewThing = function(newThing) {
+    //$scope.addNewThing = function(newThing) {
+    var addNewThing = function(newThing) {
+        console.log(newThing);
         var res = $http.post(getUrl() + '/v1.0/Things', newThing);
         res.success(function(data, status, headers, config) {
             alert( "added: " + JSON.stringify({data: data}));
