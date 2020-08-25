@@ -26,4 +26,4 @@ Launch your *Browser* and go to: <http://localhost:8080>
 
 * Owuor D.O., Laurent A., Orero J.O. (2020) Exploiting IoT Data Crossings for Gradual Pattern Mining Through Parallel Processing. In: Bellatreche L. et al. (eds) ADBIS, TPDL and EDA 2020 Common Workshops and Doctoral Consortium. TPDL 2020, ADBIS 2020. Communications in Computer and Information Science, vol 1260. Springer, Cham. https://doi.org/10.1007/978-3-030-55814-7_9
 
-* Dickson Owuor, Anne Laurent, and Joseph Orero (2019). Mining Fuzzy-temporal Gradual Patterns. In the proceedings of the 2019 IEEE International Conference on Fuzzy Systems (FuzzIEEE). IEEE. doi:10.1109/FUZZ-IEEE.2019.885888
+* Dickson Owuor, Anne Laurent, and Joseph Orero (2019). Mining Fuzzy-temporal Gradual Patterns. In the proceedings of the 2019 IEEE International Conference on Fuzzy Systems (FuzzIEEE). IEEE. https://doi.org/10.1109/FUZZ-IEEE.2019.8858883
