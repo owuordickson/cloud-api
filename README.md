@@ -10,7 +10,9 @@ You will be required to install **Docker**
 
 ## Installation
 
-Use a command line program with the local package:
+1. Download package
+
+2. Use a command line program with the local package:
 
 ``` shell
 $docker-compose up
