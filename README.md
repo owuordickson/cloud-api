@@ -4,6 +4,10 @@ A Docker implementation of OGC/SensorThings API with gradual pattern mining tool
 
 ![alt text](https://github.com/owuordickson/cloud_api/blob/master/cloud_api.png "Docker architecture")
 
+Research paper is available via this link:
+
+* Owuor, Dickson, Anne Laurent, Joseph Orero, and Olivier Lobry. "Gradual Pattern Mining Tool on Cloud." Extraction et Gestion des Connaissances: Actes EGC'2021 (2021).
+
 ## Requirements
 
 You will be required to install **Docker**
