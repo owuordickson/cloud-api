@@ -8,6 +8,12 @@ Research paper is available via this link:
 
 * Owuor, Dickson, Anne Laurent, Joseph Orero, and Olivier Lobry. "Gradual Pattern Mining Tool on Cloud." Extraction et Gestion des Connaissances: Actes EGC'2021 (2021).
 
+> [!WARNING]
+> ### REPOSITORY DEPRECATED
+> This project is no longer maintained here. The active development and updated code have moved.
+> 
+> 👉 **Get the updated code here:** [github.com/owuordickson/gp-mining](https://github.com/owuordickson/gp-mining)
+
 ## Requirements
 
 You will be required to install **Docker**
